@@ -1,4 +1,4 @@
-package com.ezen.young;
+package com.mac.demo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
