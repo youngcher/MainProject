@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,23 +27,24 @@ public class UserController {
 	private UserMapper dao;
 
 //	계정추가폼
-	@GetMapping("/add")
-	public String add() {
+	@GetMapping("/addForm")
+	public String addForm(@Valid User user, Model model) {
 		
-		return "thymeleaf/mac/addForm";
+		return "thymeleaf/mac/User/addForm";
 	}
 	
 //	계정추가
-	@PostMapping
-	@ResponseBody
-	public Map<String,Object> add(User user) {
+	@PostMapping("/add")
+//	@ResponseBody
+	public String add(User user) {
 		
-		Map<String,Object> map=new HashMap<String,Object>();
+//		Map<String,Object> map=new HashMap<String,Object>();
+//		boolean add=dao.add(user)>0;
+//		map.put("add", add);
+
+		dao.add(user);
 		
-		boolean add=dao.add(user)>0;
-		map.put("add", add);
-		
-		return map;
+		return user.getNameMac();
 	}
 	
 //	계정 삭제
@@ -61,7 +63,7 @@ public class UserController {
 	public String mypage(@PathVariable("uid") String uid, Model model) {
 		
 		User user = new User();
-		user.setUid(uid);
+		user.setUidMac(uid);
 		model.addAttribute("user", dao.getMypage(uid));
 		return "thymeleaf/mac/mypage";
 	}
@@ -71,7 +73,7 @@ public class UserController {
 	public String update(@PathVariable("uid") String uid, Model model) {
 
 		User user = new User();
-		user.setUid(uid);
+		user.setUidMac(uid);
 		model.addAttribute("board", dao.edit(user));
 		
 		return "thymeleaf/mac/mypage2";
@@ -81,12 +83,12 @@ public class UserController {
 	@ResponseBody
 	public Map<String, Object> edit(@PathVariable("uid") String uid, User newUser, Model model) {
 
-		newUser.setUpw(uid);
-		newUser.setUpw(newUser.getUpw());
-		newUser.setEmail(newUser.getEmail());
-		newUser.setCity(newUser.getCity());
-		newUser.setTown(newUser.getTown());
-		newUser.setVillage(newUser.getVillage());
+		newUser.setUpwMac(uid);
+		newUser.setUpwMac(newUser.getUpwMac());
+		newUser.setEmailMac(newUser.getEmailMac());
+		newUser.setCityMac(newUser.getCityMac());
+		newUser.setTownMac(newUser.getTownMac());
+		newUser.setVillageMac(newUser.getVillageMac());
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		boolean updated = dao.edit(newUser)>0;
