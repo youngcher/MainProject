@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.mac.demo.model.User;
+import com.mac.demo.model.Young;
 
 
 @Mapper
@@ -18,6 +19,8 @@ public interface UserMapper {
 	
 //	관리자사용권한
 	List<User> getList(User user); //모든 유저리스트 확인
+
+	int save(Young young);
 	
 	
 	

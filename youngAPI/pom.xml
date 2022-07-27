@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.young</groupId>
-	<artifactId>youngAPI</artifactId>
+	<artifactId>mac</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
-	<name>youngAPI</name>
+	<name>mac</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>11</java.version>
@@ -91,10 +91,10 @@
       
       
       <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jpa -->
-		<dependency>
+		<!--dependency>
 		    <groupId>org.springframework.boot</groupId>
 		    <artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
+		</dependency-->
 
       <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
 		<dependency>

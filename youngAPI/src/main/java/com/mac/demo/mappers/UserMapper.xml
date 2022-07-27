@@ -23,5 +23,9 @@
 	<delete id="delete" parameterType="com.mac.demo.model.User">
 		DELETE FROM user WHERE user=#{user}
 	</delete>
+	
+	<insert id="save" parameterType="com.mac.demo.model.Young">
+		INSERT INTO young(USERID, USERNAME) VALUES(#{userid}, #{userName})
+	</insert>
 
 </mapper>

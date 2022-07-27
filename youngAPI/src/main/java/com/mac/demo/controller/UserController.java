@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mac.demo.mappers.UserMapper;
 import com.mac.demo.model.User;
+import com.mac.demo.model.Young;
 
 @Controller
 @RequestMapping("/user")
@@ -29,6 +30,13 @@ public class UserController {
 //	계정추가폼
 	@GetMapping("/addForm")
 	public String addForm(@Valid User user, Model model) {
+		
+		Young young = new Young();
+		
+		young.setUserid(1);
+		young.setUserName("영철");
+		
+		dao.save(young);
 		
 		return "thymeleaf/mac/User/addForm";
 	}
