@@ -5,27 +5,23 @@
 <mapper namespace="com.mac.demo.mappers.UserMapper">
 
 	<insert id="add" parameterType="com.mac.demo.model.User">
-		INSERT INTO user(name,birth,uid,upw,phoneNum,email,nickName,gender,city,town,village,manager) VALUES(#{name},#{birth},#{uid},#{upw},#{phoneNum},#{email},#{nickName},#{gender},#{email},#{city},#{town},#{village},#{manager})
+		INSERT INTO USER_TB(nummac, idmac, pwmac, nicknamemac, emailmac, gendermac, birthmac, phonenummac, citymac, townmac, villagemac, managermac, namemac) VALUES(#{numMac},#{idMac},#{pwMac},#{nickNameMac},#{emailMac},#{genderMac},#{birthMac},#{phoneNumMac},#{cityMac},#{townMac},#{villageMac},#{managerMac},#{nameMac})
 	</insert>
 
 	<select id="getList" resultType="com.mac.demo.model.User">
-		SELECT * FROM user
+		SELECT * FROM USER_TB
 	</select>
 	
 	<select id="getDetail" resultType="com.mac.demo.model.User">
-		SELECT * FROM user WHERE uid=#{uid}
+		SELECT * FROM USER_TB WHERE uid=#{uid}
 	</select>
 
 	<update id="edit" parameterType="com.mac.demo.model.User">
-		UPDATE user SET name=#{name}, birth=#{birth}, city=#{city}, town=#{town}, village=#{village}, email=#{email}, gender=#{gender}, upw=#{upw} WHERE uid=#{uid}
+		UPDATE USER_TB SET name=#{name}, birth=#{birth}, city=#{city}, town=#{town}, village=#{village}, email=#{email}, gender=#{gender}, upw=#{upw} WHERE uid=#{uid}
 	</update>
 	
 	<delete id="delete" parameterType="com.mac.demo.model.User">
-		DELETE FROM user WHERE user=#{user}
+		DELETE FROM USER_TB WHERE user=#{user}
 	</delete>
 	
-	<insert id="save" parameterType="com.mac.demo.model.Young">
-		INSERT INTO young(USERID, USERNAME) VALUES(#{userid}, #{userName})
-	</insert>
-
 </mapper>

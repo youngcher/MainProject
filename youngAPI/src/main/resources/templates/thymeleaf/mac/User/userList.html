@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>User List</title>
+</head>
+<body>
+<main>
+<table>
+<tr>
+	<td>numMac</td>
+	<td>idMac</td>
+	<td>pwMac</td>
+	<td>nickNameMac</td>
+	<td>emailMac</td>
+	<td>genderMac</td>
+	<td>birthMac</td>
+	<td>phoneNumMAC</td>
+	<td>cityMac</td>
+	<td>townMac</td>
+	<td>villageMac</td>
+	<td>managerMac</td>
+	<td>nameMac</td>
+</tr>
+<tr th:each="user : ${list}">
+	<td th:text="${user.numMac}"></td>
+	<td th:text="${user.idMac}"></td>
+	<td th:text="${user.pwMac}"></td>
+	<td th:text="${user.nickNameMac}"></td>
+	<td th:text="${user.emailMac}"></td>
+	<td th:text="${user.genderMac}"></td>
+	<td th:text="${user.birthMac}"></td>
+	<td th:text="${user.phoneNumMac}"></td>
+	<td th:text="${user.cityMac}"></td>
+	<td th:text="${user.townMac}"></td>
+	<td th:text="${user.villageMac}"></td>
+	<td th:text="${user.managerMac}"></td>
+	<td th:text="${user.nameMac}"></td>
+</tr>
+</table>
+</main>
+</body>
+</html>

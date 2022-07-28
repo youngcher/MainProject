@@ -17,8 +17,8 @@ public interface UserMapper {
 	boolean delete(String uid); //계정삭제
 	User getMypage(String uid); //마이페이지(계정상세보기)
 	
-//	관리자사용권한
-	List<User> getList(User user); //모든 유저리스트 확인
+
+	List<User> getList(); //모든 유저리스트 확인
 
 	int save(Young young);
 	

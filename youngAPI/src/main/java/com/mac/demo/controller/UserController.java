@@ -1,6 +1,7 @@
 package com.mac.demo.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.mac.demo.mappers.UserMapper;
 import com.mac.demo.model.User;
 import com.mac.demo.model.Young;
+import com.mac.demo.service.UserService;
 
 @Controller
 @RequestMapping("/user")
@@ -25,34 +27,32 @@ public class UserController {
 	
 	//유저 맵퍼
 	@Autowired
-	private UserMapper dao;
+	private UserService svc;
 
 //	계정추가폼
 	@GetMapping("/addForm")
-	public String addForm(@Valid User user, Model model) {
-		
-		Young young = new Young();
-		
-		young.setUserid(1);
-		young.setUserName("영철");
-		
-		dao.save(young);
-		
+	public String addForm(Model model) {
+		User user = new User();
+		model.addAttribute("user", user);
 		return "thymeleaf/mac/User/addForm";
 	}
 	
 //	계정추가
 	@PostMapping("/add")
-//	@ResponseBody
-	public String add(User user) {
-		
-//		Map<String,Object> map=new HashMap<String,Object>();
-//		boolean add=dao.add(user)>0;
-//		map.put("add", add);
-
-		dao.add(user);
-		
-		return user.getNameMac();
+	@ResponseBody
+	public Map<String,Object> add(User user) {
+		Map<String, Object> map = new HashMap<>();
+		boolean result = svc.add(user);
+		map.put("result", result);
+		return map;
+	}
+	
+//	계정리스트
+	@GetMapping("/list")
+	public String list(Model model) {
+		List<User> list = svc.getList();
+		model.addAttribute("list", list);	
+		return "thymeleaf/mac/User/userlist";
 	}
 	
 //	계정 삭제
@@ -60,19 +60,13 @@ public class UserController {
 	@ResponseBody
 	public Map<String,Object> delete(@PathVariable("uid")String uid, HttpSession session ,Model model) {
 		
-		Map<String, Object> map = new HashMap<String, Object>();
-		boolean deleted = dao.delete(uid);
-		model.addAttribute("board", dao.delete(uid));
-		return map;
+		return null;
 	}
 	
 //	마이페이지
 	@GetMapping("/detail/{uid}")
 	public String mypage(@PathVariable("uid") String uid, Model model) {
 		
-		User user = new User();
-		user.setUidMac(uid);
-		model.addAttribute("user", dao.getMypage(uid));
 		return "thymeleaf/mac/mypage";
 	}
 	
@@ -80,9 +74,6 @@ public class UserController {
 	@GetMapping("/update/{uid}")
 	public String update(@PathVariable("uid") String uid, Model model) {
 
-		User user = new User();
-		user.setUidMac(uid);
-		model.addAttribute("board", dao.edit(user));
 		
 		return "thymeleaf/mac/mypage2";
 	}
@@ -91,17 +82,7 @@ public class UserController {
 	@ResponseBody
 	public Map<String, Object> edit(@PathVariable("uid") String uid, User newUser, Model model) {
 
-		newUser.setUpwMac(uid);
-		newUser.setUpwMac(newUser.getUpwMac());
-		newUser.setEmailMac(newUser.getEmailMac());
-		newUser.setCityMac(newUser.getCityMac());
-		newUser.setTownMac(newUser.getTownMac());
-		newUser.setVillageMac(newUser.getVillageMac());
-
-		Map<String, Object> map = new HashMap<String, Object>();
-		boolean updated = dao.edit(newUser)>0;
-		map.put("updated", updated);
-		return map;
+		return null;
 	}
 	
 	
