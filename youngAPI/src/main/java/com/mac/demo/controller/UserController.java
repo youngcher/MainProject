@@ -55,19 +55,24 @@ public class UserController {
 		return "thymeleaf/mac/User/userlist";
 	}
 	
-//	계정 삭제
-	@PostMapping("/delete")
-	@ResponseBody
-	public Map<String,Object> delete(@PathVariable("uid")String uid, HttpSession session ,Model model) {
-		
-		return null;
+//	마이페이지
+	@GetMapping("/detail/{nick}")
+	public String mypage(@PathVariable("nick") String nick, Model model) {
+		User user = svc.getOne(nick);
+		model.addAttribute("user", user);
+		return "thymeleaf/mac/User/myPage";
 	}
 	
-//	마이페이지
-	@GetMapping("/detail/{uid}")
-	public String mypage(@PathVariable("uid") String uid, Model model) {
-		
-		return "thymeleaf/mac/mypage";
+//	계정 삭제
+	@PostMapping("/deleted")
+	@ResponseBody
+	public Map<String,Object> deleted(User user, HttpSession session ,Model model) {
+		Map<String, Object> map = new HashMap<>();
+		System.out.println("here here");
+		String nickNameMac = user.getNickNameMac();
+		boolean result = svc.deleted(nickNameMac);
+		map.put("result", result);
+		return map;
 	}
 	
 //  유저 업데이트폼

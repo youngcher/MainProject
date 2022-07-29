@@ -8,6 +8,7 @@
 <main>
 <table>
 <tr>
+	<td></td>
 	<td>numMac</td>
 	<td>idMac</td>
 	<td>pwMac</td>
@@ -23,6 +24,7 @@
 	<td>nameMac</td>
 </tr>
 <tr th:each="user : ${list}">
+	<td><a th:href="@{'/user/detail/'+${user.idMac}}">정보보기</a></td>
 	<td th:text="${user.numMac}"></td>
 	<td th:text="${user.idMac}"></td>
 	<td th:text="${user.pwMac}"></td>

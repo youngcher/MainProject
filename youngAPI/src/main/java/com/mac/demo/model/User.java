@@ -20,6 +20,7 @@ public class User {
 	private int managerMac;
 	private String nameMac;
 	
+	
 	public int getNumMac() {
 		return numMac;
 	}
@@ -62,10 +63,10 @@ public class User {
 	public void setBirthMac(Date birthMac) {
 		this.birthMac = birthMac;
 	}
-	public String getPhoneNumMAC() {
+	public String getPhoneNumMac() {
 		return phoneNumMac;
 	}
-	public void setPhoneNumMAC(String phoneNumMac) {
+	public void setPhoneNumMac(String phoneNumMac) {
 		this.phoneNumMac = phoneNumMac;
 	}
 	public String getCityMac() {

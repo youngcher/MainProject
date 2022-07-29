@@ -12,16 +12,16 @@
 		SELECT * FROM USER_TB
 	</select>
 	
-	<select id="getDetail" resultType="com.mac.demo.model.User">
-		SELECT * FROM USER_TB WHERE uid=#{uid}
+	<select id="getOne" resultType="com.mac.demo.model.User">
+		SELECT * FROM USER_TB WHERE nicknamemac= #{nick}
 	</select>
 
 	<update id="edit" parameterType="com.mac.demo.model.User">
 		UPDATE USER_TB SET name=#{name}, birth=#{birth}, city=#{city}, town=#{town}, village=#{village}, email=#{email}, gender=#{gender}, upw=#{upw} WHERE uid=#{uid}
 	</update>
 	
-	<delete id="delete" parameterType="com.mac.demo.model.User">
-		DELETE FROM USER_TB WHERE user=#{user}
+	<delete id="deleted" parameterType="String">
+		DELETE FROM USER_TB WHERE nicknamemac=#{nickNameMac}
 	</delete>
 	
 </mapper>

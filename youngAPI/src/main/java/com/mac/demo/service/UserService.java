@@ -25,6 +25,16 @@ public class UserService {
 		
 		return dao.getList();
 	}
+
+	public User getOne(String nick) {
+		User user = dao.getOne(nick);
+		return user;
+	}
+
+	public boolean deleted(String nickNameMac) {
+		boolean result = dao.deleted(nickNameMac);
+		return result;
+	}
 	
 	
 	

@@ -28,7 +28,7 @@ function added()
 <body>
 <main>
 <h3>addForm 입니다.</h3>
-<form id="added" onsubmit="return added();" th:object="${User}">
+<form id="added" th:object="${user}" onsubmit="return added();" >
     <div>
         <label for="numMac">번호</label>
         <input type="number" th:field="*{numMac}" id="numMac" placeholder="번호">
@@ -57,9 +57,9 @@ function added()
         <label for="birthMac">생년월일</label>
         <input type="date" th:field="*{birthMac}" id="birthMac" placeholder="생년월일">
     </div>
-    <div>
-        <label for="phoneNumMac">전화번호</label>
-        <input type="text" th:field="*{phoneNumMac}" id="phoneNumMac" placeholder="전화번호">
+	<div>
+        <label for="phoneNumMac">핸드폰번호</label>
+        <input type="text" th:field="*{phoneNumMac}" id="phoneNumMac" placeholder="핸드폰번호">
     </div>
     <div>
         <label for="cityMac">시</label>
