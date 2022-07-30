@@ -12,10 +12,11 @@ function deleted() {
 		url:'/user/deleted',
 		method:'post',
 		cache:false,
-		data:$('#nick').serialize(),
+		data:$('#del').serialize(),
 		dataType:'json',
 		success:function(res){
 			alert(res.result ? '삭제 성공':'삭제 실패');
+			location.href="/user/list";
 		},
 		error:function(xhr,status, err){
 			alert('에러:'+err);
@@ -72,11 +73,16 @@ function deleted() {
   </div>
    
 <div>
-<form id="nick" th:object="${user}" onsubmit="return deleted();">
-<input type="hidden" name="nickNameMac" th:value="*{nickNameMac}">
+<form id="del" th:object="${user}" onsubmit="return deleted();">
+<input type="hidden" name="idMac" th:value="*{idMac}">
 	<button type="submit">삭제</button>
 </form>
-
+</div>
+<div>
+<form id="update" th:object="${user}" action="/user/updateForm" >
+<input type="hidden" name="idMac" th:value="*{idMac}">
+	<button type="submit">수정</button>
+</form>
 </div>
 </body>
 </html>

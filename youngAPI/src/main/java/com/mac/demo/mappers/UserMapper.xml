@@ -13,15 +13,15 @@
 	</select>
 	
 	<select id="getOne" resultType="com.mac.demo.model.User">
-		SELECT * FROM USER_TB WHERE nicknamemac= #{nick}
+		SELECT * FROM USER_TB WHERE idmac= #{idMac}
 	</select>
 
-	<update id="edit" parameterType="com.mac.demo.model.User">
-		UPDATE USER_TB SET name=#{name}, birth=#{birth}, city=#{city}, town=#{town}, village=#{village}, email=#{email}, gender=#{gender}, upw=#{upw} WHERE uid=#{uid}
+	<update id="updated" parameterType="com.mac.demo.model.User">
+		UPDATE USER_TB SET pwmac=#{pwMac}, emailmac=#{emailMac}, phonenummac=#{phoneNumMac}, citymac=#{cityMac}, townmac=#{townMac}, villagemac=#{villageMac} WHERE idmac=#{idMac}
 	</update>
 	
 	<delete id="deleted" parameterType="String">
-		DELETE FROM USER_TB WHERE nicknamemac=#{nickNameMac}
+		DELETE FROM USER_TB WHERE idmac=#{idMac}
 	</delete>
 	
 </mapper>

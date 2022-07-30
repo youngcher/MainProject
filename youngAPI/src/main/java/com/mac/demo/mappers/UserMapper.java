@@ -18,9 +18,11 @@ public interface UserMapper {
 	//계정추가
 	int add(User user);
 	//계정정보
-	User getOne(String nick);
+	User getOne(String idMac);
 	//계정삭제
-	boolean deleted(String nickNameMac);
+	boolean deleted(String idMac);
+	//계정정보 수정
+	boolean updated(User user);
 	
 	
 	

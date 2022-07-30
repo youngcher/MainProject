@@ -7,7 +7,7 @@ public class User {
 
 	
 	private int numMac;
-	private String idMac;
+	private String idMac;  //pk
 	private String pwMac; 
 	private String nickNameMac; 
 	private String emailMac;

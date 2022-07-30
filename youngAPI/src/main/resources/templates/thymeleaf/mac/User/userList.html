@@ -24,7 +24,7 @@
 	<td>nameMac</td>
 </tr>
 <tr th:each="user : ${list}">
-	<td><a th:href="@{'/user/detail/'+${user.idMac}}">정보보기</a></td>
+	<td><a th:href="@{/user/detail(idMac=${user.idMac})}">정보보기</a></td>
 	<td th:text="${user.numMac}"></td>
 	<td th:text="${user.idMac}"></td>
 	<td th:text="${user.pwMac}"></td>
@@ -40,6 +40,9 @@
 	<td th:text="${user.nameMac}"></td>
 </tr>
 </table>
+<div>
+<button type="button"  onclick="location.href='/user/addForm'">회원가입</button>
+</div>
 </main>
 </body>
 </html>

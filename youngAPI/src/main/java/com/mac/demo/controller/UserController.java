@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mac.demo.mappers.UserMapper;
@@ -56,9 +57,9 @@ public class UserController {
 	}
 	
 //	마이페이지
-	@GetMapping("/detail/{nick}")
-	public String mypage(@PathVariable("nick") String nick, Model model) {
-		User user = svc.getOne(nick);
+	@GetMapping("/detail")
+	public String mypage(@RequestParam("idMac")String idMac, Model model) {
+		User user = svc.getOne(idMac);
 		model.addAttribute("user", user);
 		return "thymeleaf/mac/User/myPage";
 	}
@@ -66,28 +67,31 @@ public class UserController {
 //	계정 삭제
 	@PostMapping("/deleted")
 	@ResponseBody
-	public Map<String,Object> deleted(User user, HttpSession session ,Model model) {
+	public Map<String,Object> deleted(User user, HttpSession session) {
 		Map<String, Object> map = new HashMap<>();
-		System.out.println("here here");
-		String nickNameMac = user.getNickNameMac();
-		boolean result = svc.deleted(nickNameMac);
+		String idMac = user.getIdMac();
+		boolean result = svc.deleted(idMac);
 		map.put("result", result);
 		return map;
 	}
 	
 //  유저 업데이트폼
-	@GetMapping("/update/{uid}")
-	public String update(@PathVariable("uid") String uid, Model model) {
-
-		
-		return "thymeleaf/mac/mypage2";
+	@GetMapping("/updateForm")
+	public String update(User user, Model model) {
+		System.out.println(user.getIdMac());
+		User user2 = svc.getOne(user.getIdMac());
+		model.addAttribute("user", user2);
+		return "thymeleaf/mac/User/updateForm";
 	}
+	
 //  유저 정보 수정
-	@GetMapping("/edit/{num}")
+	@PostMapping("/updated")
 	@ResponseBody
-	public Map<String, Object> edit(@PathVariable("uid") String uid, User newUser, Model model) {
-
-		return null;
+	public Map<String, Object> edit(User user, HttpSession session) {
+		Map<String, Object> map = new HashMap<>();
+		boolean result = svc.updated(user);
+		map.put("result", result);
+		return map;
 	}
 	
 	
