@@ -5,7 +5,6 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.mac.demo.model.User;
-import com.mac.demo.model.Young;
 
 
 @Mapper

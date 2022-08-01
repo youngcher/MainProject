@@ -5,7 +5,8 @@
 <mapper namespace="com.mac.demo.mappers.UserMapper">
 
 	<insert id="add" parameterType="com.mac.demo.model.User">
-		INSERT INTO USER_TB(nummac, idmac, pwmac, nicknamemac, emailmac, gendermac, birthmac, phonenummac, citymac, townmac, villagemac, managermac, namemac) VALUES(#{numMac},#{idMac},#{pwMac},#{nickNameMac},#{emailMac},#{genderMac},#{birthMac},#{phoneNumMac},#{cityMac},#{townMac},#{villageMac},#{managerMac},#{nameMac})
+		INSERT INTO USER_TB(nummac, idmac, pwmac, nicknamemac, emailmac, gendermac, birthmac, phonenummac, citymac, townmac, villagemac, managermac, namemac) 
+		VALUES(USER_NUM.nextval,#{idMac},#{pwMac},#{nickNameMac},#{emailMac},#{genderMac},#{birthMac},#{phoneNumMac},#{cityMac},#{townMac},#{villageMac},#{managerMac},#{nameMac})
 	</insert>
 
 	<select id="getList" resultType="com.mac.demo.model.User">

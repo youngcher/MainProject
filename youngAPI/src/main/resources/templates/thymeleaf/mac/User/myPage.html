@@ -71,6 +71,35 @@ function deleted() {
   </table>   
   
   </div>
+  
+    <div th:if="${#lists.isEmpty(adsBoard)}">
+   <h2>광고게시판 글</h2>
+     <h3>글이 없습니다</h3>
+   </div>
+
+
+   <div th:unless="${#lists.isEmpty(adsBoard)}">
+     <h2>광고게시판 글</h2>
+     
+     <table class="table">
+     <thead>
+    <tr>
+      <th scope="col">닉네임</th>
+      <th scope="col">제목</th>
+      <th scope="col">내용</th>
+      <th scope="col">날짜</th>
+    </tr>
+  </thead>
+    	 <tr th:each="a : ${adsBoard}">
+       	 <td th:text="'닉네임:'+ ${a.nickNameMac}"></td>
+     	 <td th:text="'제목:'+${a.titleMac}"></td>
+       	 <td th:text="'내용:'+${a.contentsMac}"></td>
+       	 <td th:text="'날짜:'+${a.wdateMac}"></td>
+        
+     </tr>
+  </table>   
+   
+   </div>
    
 <div>
 <form id="del" th:object="${user}" onsubmit="return deleted();">
@@ -78,6 +107,7 @@ function deleted() {
 	<button type="submit">삭제</button>
 </form>
 </div>
+
 <div>
 <form id="update" th:object="${user}" action="/user/updateForm" >
 <input type="hidden" name="idMac" th:value="*{idMac}">

@@ -40,6 +40,11 @@ public class UserService {
 		boolean result = dao.updated(user);
 		return result;
 	}
+
+	public boolean idcheck(String idMac) {
+		User user = dao.getOne(idMac);
+		return user == null;
+	}
 	
 	
 	

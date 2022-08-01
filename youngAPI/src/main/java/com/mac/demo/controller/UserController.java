@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,9 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.mac.demo.mappers.UserMapper;
 import com.mac.demo.model.User;
-import com.mac.demo.model.Young;
 import com.mac.demo.service.UserService;
 
 @Controller
@@ -94,5 +91,23 @@ public class UserController {
 		return map;
 	}
 	
+//	ID 중복체크
+	@PostMapping("/idcheck")
+	@ResponseBody
+	public Map<String, Object> idcheck(@RequestParam("idMac")String idMac, Model model) {
+		Map<String, Object> map = new HashMap<>();
+		boolean result = svc.idcheck(idMac);
+		map.put("result", result);
+		map.put("id" , idMac);
+		return map;
+	}
+	
+	@GetMapping("/addForm/{idMac}")
+	public String addForm2(@PathVariable("idMac")String idMac, Model model) {
+		User user = new User();
+		user.setIdMac(idMac);
+		model.addAttribute("user", user);
+		return "thymeleaf/mac/User/addForm";
+	}
 	
 }
