@@ -6,6 +6,11 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script type="text/javascript">
 
+var idMac = null;
+var checkcode = null;
+var emailMac = null;
+
+
 function added() {
 	
 	var pw = document.getElementById('pwMac').value;
@@ -81,6 +86,54 @@ function idcheck() {
 	return false;
 }
 
+//메일 전송
+function sendMsg()
+{
+	$.ajax({
+		url:'/user/checkmail',
+		method:'post',
+		cache:false,
+		data:$('#emailcheck').serialize(),
+		dataType:'json',
+		success:function(res){
+			alert(res.result ? '메일 전송 완료':'메일 전송 실패');
+			checkcode = res.code;
+			emailMac = res.emailMac;
+			idMac = '[[${user.idMac}]]';
+		},
+		error:function(xhr,status, err){
+			alert('에러:'+err);
+		}
+	});
+	return false;
+}
+
+//메일 체크
+function checked()
+{	
+	//alert('[[${user.idMac}]]');
+	var data= $('#checkcode').serialize();
+	$.ajax({
+		url:'/user/checkcode',
+		method:'post',
+		cache:false,
+		data:$('#checked').serialize(),
+		dataType:'json',
+		success:function(res){
+			if(res.code == checkcode) {
+				alert("인증 성공");
+				location.href="/user/addForm/"+idMac+"/"+emailMac;
+			} else {
+				alert("인증 실패");
+			}
+		},
+		error:function(xhr,status, err){
+			alert('에러:'+err);
+		}
+	});
+	return false;
+}
+
 function keyevent() {
 	if(document.getElementById('pwMac').value !='' && document.getElementById('pwMac2').value!=''){
         if(document.getElementById('pwMac').value==document.getElementById('pwMac2').value){
@@ -109,8 +162,25 @@ function keyevent() {
 </div>
 </form>
 
+<form id="emailcheck" th:object="${user}" onsubmit="return sendMsg();" >
+<div th:if="*{idMac!=null && emailMac==null}">
+	<label for="emailMac">이메일</label>
+	<input type="email" th:field="*{emailMac}" id="emailMac" placeholder="이메일">
+    <button type="submit">이메일 인증</button>
+</div>
+</form>
+
+<form id="checked" onsubmit="return checked();">
+	<div th:if="*{idMac!=null && emailMac==null}"><label>확인코드<input type="text" name="code"></label></div>
+	<div th:if="*{idMac!=null && emailMac==null}">
+		<button type="reset">취소</button>
+		<button type="submit">인증코드 확인</button>
+	</div>
+</form>
+
+
 <form id="added" th:object="${user}" onsubmit="return added();" >
-<div th:if="*{idMac!=null}">    
+<div th:if="*{idMac!=null && emailMac!=null}">    
     <div>
         <label for="idMac">아이디</label>
         <input type="text" th:field="*{idMac}" id="idMac" th:value="*{idMac}" placeholder="아이디" readonly="readonly">
@@ -131,7 +201,7 @@ function keyevent() {
     </div>
     <div>
         <label for="emailMac">이메일</label>
-        <input type="email" th:field="*{emailMac}" id="emailMac" placeholder="이메일">
+        <input type="email" th:field="*{emailMac}" th:value="*{emailMac}" id="emailMac" placeholder="이메일" readonly="readonly">
     </div>
     <div>
         <label for="genderMac">성별</label>
@@ -170,6 +240,8 @@ function keyevent() {
 	    <button type="submit">저장</button>
     </nav>
 </div>
+
+
 </form>
 </main>
 </body>
