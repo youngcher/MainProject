@@ -17,7 +17,6 @@ public class User {
 	private String cityMac;
 	private String townMac; 
 	private String villageMac;
-	private int managerMac;
 	private String nameMac;
 	
 	
@@ -37,7 +36,19 @@ public class User {
 		return pwMac;
 	}
 	public void setPwMac(String pwMac) {
-		this.pwMac = pwMac;
+		int check_SC = 0;
+		String[] sc = {"!","@","#","$","%"};
+		for(int i=0; i<sc.length; i++) {
+			if(pwMac.indexOf(sc[i]) != -1){
+	            check_SC = 1;
+	        }
+		}
+		
+		if(pwMac.length() >= 6 || pwMac.length() <= 16) {
+			if(check_SC == 1) {
+				this.pwMac = pwMac;
+			}
+		}
 	}
 	public String getNickNameMac() {
 		return nickNameMac;
@@ -86,12 +97,6 @@ public class User {
 	}
 	public void setVillageMac(String villageMac) {
 		this.villageMac = villageMac;
-	}
-	public int getManagerMac() {
-		return managerMac;
-	}
-	public void setManagerMac(int managerMac) {
-		this.managerMac = managerMac;
 	}
 	public String getNameMac() {
 		return nameMac;

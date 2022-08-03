@@ -35,6 +35,7 @@ public class UserController {
 		return "thymeleaf/mac/User/addForm";
 	}
 	
+//	아이디 체크후 추가폼
 	@GetMapping("/addForm/{idMac}")
 	public String addForm2(@PathVariable("idMac")String idMac, Model model) {
 		User user = new User();
@@ -43,13 +44,19 @@ public class UserController {
 		return "thymeleaf/mac/User/addForm";
 	}
 	
-	@GetMapping("/addForm/{idMac}/{emailMac}")
-	public String addForm3(@PathVariable("idMac")String idMac, @PathVariable("emailMac")String emailMac, Model model) {
+//	아이디 체크, 이메일 인증후 추가폼
+	@PostMapping("/addForm/{idMac}/{emailMac}")
+	public String addForm3(@PathVariable("idMac")String idMac, 
+			@PathVariable("emailMac")String emailMac, 
+			@RequestParam(name ="check", defaultValue="0")String check, Model model) {
 		User user = new User();
 		user.setIdMac(idMac);
 		user.setEmailMac(emailMac);
-		model.addAttribute("user", user);
-		return "thymeleaf/mac/User/addForm";
+		if(Integer.parseInt(check) == 1) {
+			model.addAttribute("user", user);
+			return "thymeleaf/mac/User/addForm";
+		}
+		return "thymeleaf/mac/error/erroPage";
 	}
 	
 //	계정추가
@@ -92,7 +99,6 @@ public class UserController {
 //  유저 업데이트폼
 	@GetMapping("/updateForm")
 	public String update(User user, Model model) {
-		System.out.println(user.getIdMac());
 		User user2 = svc.getOne(user.getIdMac());
 		model.addAttribute("user", user2);
 		return "thymeleaf/mac/User/updateForm";
@@ -118,32 +124,38 @@ public class UserController {
 		map.put("id" , idMac);
 		return map;
 	}
-//	email 인증
+//	email 인증 보내기
 	@PostMapping("/checkmail")
 	@ResponseBody
 	public Map<String, Object> emailcheck(@RequestParam("emailMac")String emailMac) {
 		Map<String, Object> map = new HashMap<>();
-		
 		String random = svc.checkmail(emailMac);
-		
 		if(random!=null) {
 			map.put("result", true);
 		} else {
 			map.put("result", false);
 		}
-		
 		map.put("code", random);
 		map.put("emailMac", emailMac);
-		
 		return map;
 	}
 	
+//	이메일 인증코드
 	@PostMapping("/checkcode")
 	@ResponseBody
 	public Map<String, Object> checkcode(@RequestParam("code")String code) {
 		Map<String, Object> map = new HashMap<>();
-		System.out.println(code);
 		map.put("code", code);
+		return map;
+	}
+	
+//	닉네임
+	@PostMapping("/nickCheck")
+	@ResponseBody
+	public Map<String, Object> nickCheck(@RequestParam("nick")String nick) {
+		Map<String, Object> map = new HashMap<>();
+		boolean result = svc.nickCheck(nick);
+		map.put("result", result);
 		return map;
 	}
 	
