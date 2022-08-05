@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>User List</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script  th:inline="javascript">
+function deleted(numMac) {
+	if(!confirm('해당 계정 삭제하시겠어요?')) return;
+	$.ajax({
+		url:'/admin/userDeleted/'+numMac,
+		method:'get',
+		cache:false,
+		data:$('#del').serialize(),
+		dataType:'json',
+		success:function(res){
+			alert(res.result ? '삭제 성공':'삭제 실패');
+			location.href="/admin/allUser";
+		},
+		error:function(xhr,status, err){
+			alert('에러:'+err);
+		}
+	});
+	return false;
+}
+</script>
+</head>
+<body>
+<ul class="nav">
+  
+  <li class="nav-item">
+    <a class="nav-link" href="/admin/allUser">모든계정</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="/admin/allFreeBoard">모든 자유게시물</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link"  href="/admin/allAdsBoard">모든 광고게시물</a>
+  </li>
+   <li class="nav-item">
+    <a class="nav-link" href="/admin/writeNotice">공지사항 쓰기</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="/admin/allNoticeBoard">모든 공지사항</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="/admin/allCommentBoard">모든 댓글</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="/admin">메인으로</a>
+  </li>
+</ul>
+<main>
+<table class="table table-bordered">
+<tr>
+	<td>numMac</td>
+	<td>idMac</td>
+	<td>pwMac</td>
+	<td>nickNameMac</td>
+	<td>emailMac</td>
+	<td>genderMac</td>
+	<td>birthMac</td>
+	<td>phoneNumMAC</td>
+	<td>cityMac</td>
+	<td>townMac</td>
+	<td>villageMac</td>
+	<td>managerMac</td>
+	<td>nameMac</td>
+	<td>탈퇴</td>
+</tr>
+<tr th:each="user : ${pageInfo.list}">
+	<td th:text="${user.numMac}"></td>
+	<td th:text="${user.idMac}"></td>
+	<td th:text="${user.pwMac}"></td>
+	<td th:text="${user.nickNameMac}"></td>
+	<td th:text="${user.emailMac}"></td>
+	<td th:text="${user.genderMac}"></td>
+	<td th:text="${user.birthMac}"></td>
+	<td th:text="${user.phoneNumMac}"></td>
+	<td th:text="${user.cityMac}"></td>
+	<td th:text="${user.townMac}"></td>
+	<td th:text="${user.villageMac}"></td>
+	<td th:text="${user.nameMac}"></td>
+	<td> <button th:onclick="javascript:deleted([[${user.numMac}]])">추방</button></td>
+</tr>
+
+</table>
+
+</main>
+
+
+
+<span th:each="i :${pageInfo.navigatepageNums}" >
+
+<span th:if="${i==pageInfo.pageNum}">
+ <span th:text="${i}"></span>
+</span>
+
+<span th:if="${i!=pageInfo.pageNum}">
+[<a th:text='${i}' th:href="'/admin/allUser?page='+(${i})"></a>]
+</span>
+</span>
+
+</body>
+</html>

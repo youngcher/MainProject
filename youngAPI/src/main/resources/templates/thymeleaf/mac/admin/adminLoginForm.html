@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Log in with your credentials</title>
+    <script type="text/javascript">
+    var msg='[[${msg}]]';
+	if(msg)alert(msg);
+    </script>
+</head>
+<body>
+
+    <form method="POST" action="/doLogin">
+
+        <h2>Login</h2>
+        <div>
+            <input name="id" type="text" value="admin" autofocus="true"/>
+        </div>
+        <div>
+            <input name="pw" type="password"/>
+      </div>
+      <div>
+            <button type="submit">Log In</button>
+        </div>
+    </form>
+</html>

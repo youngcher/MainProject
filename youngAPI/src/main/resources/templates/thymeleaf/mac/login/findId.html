@@ -68,7 +68,6 @@ a {
 	display: inline-block;
 	width: fit-content;
 	font-size: 0.8em;
-	magrin: 10 auto;
 }
 </style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"
@@ -76,8 +75,9 @@ a {
 	crossorigin="anonymous"></script>
 
 <script type="text/javascript">
-	var msg='[[${msg}]]';
-	if(msg)alert(msg);
+	var msg = '[[${msg}]]';
+	if (msg)
+		alert(msg);
 	function login() {
 		var serData = $('#loginForm').serialize();
 		$.ajax({
@@ -116,6 +116,7 @@ a {
 			}
 		});
 	}
+	
 </script>
 </head>
 <body>
@@ -133,12 +134,13 @@ a {
 		</div>
 		<div>
 			<div th:if="${idMac==null}">
-			<a href="/login/loginForm"> <strong>로그인</strong></a>
-			<a href="/user/addForm"> <strong>회원가입</strong></a>
+				<a href="/login/loginForm"> <strong>로그인</strong></a> <a
+					href="/user/addForm"> <strong>회원가입</strong></a>
 			</div>
 			<div th:if="${idMac !=null}">
-			 <a href="javascript:logout();"> <strong>로그아웃|</strong></a>
-			 <a th:href="'/home/myPage/'+${idMac}"> <strong>마이페이지</strong></a>
+				<h5 th:text=" ${idMac}+'님 환영합니다'" th:style="'color:white'"></h5>
+				<a href="javascript:logout();"> <strong>로그아웃|</strong></a> <a
+					th:href="'/home/myPage/'+${idMac}"> <strong>마이페이지</strong></a>
 			</div>
 		</div>
 		<div>
@@ -158,9 +160,9 @@ a {
 					<!--                     <p class="text-muted">공지사항</p> -->
 					<ul class="list-unstyled">
 						<li><a href="/board/main" class="text-white">커뮤니티 메인화면</a></li>
-						<li><a href="/board/notice" class="text-white">공지사항</a></li>
-						<li><a href="/board/list" class="text-white">자유게시판</a></li>
-						<li><a href="/board/ads" class="text-white">광고게시판</a></li>
+						<li><a href="/board/notice/list" class="text-white">공지사항</a></li>
+						<li><a href="/board/free/list" class="text-white">자유게시판</a></li>
+						<li><a href="/board/ads/list" class="text-white">광고게시판</a></li>
 					</ul>
 				</div>
 				<div class="col-sm-4 col-md-5 py-4">
@@ -183,32 +185,33 @@ a {
 		</div>
 	</div>
 	<main>
-		<h3>아이디 찾기</h3>
-		<div class="link_user">
-			<a href="/user/add">회원등록</a> | <a href="/login/findId">아이디/</a><a href="/login/findPassword">암호 찾기</a> | <a
-				href="javascript:logout();">로그아웃</a>
+		<div style="text-align: center; margin-bottom: 30px;">
+			<h3>아이디 찾기</h3>
 		</div>
-		<form class="form-signin" th:action="@{/login/findId}"
-			method="post">
+		<form class="form-signin" th:action="@{/login/findId}" method="post">
 			<!-- 요청 보내기-->
+			<div>
+			<label for="nameMac" class="sr-only">이름 &nbsp; &nbsp;</label> <input
+				type="text" id="nameMac" name="nameMac" class="form-control"
+				placeholder="이름" style="margin-bottom: 10px; width:250px;" required autofocus> 
+			
+			<label for="emailMac"
+				class="sr-only">이메일 &nbsp;</label> <input type="text" id="emailMac"
+				name="emailMac" class="form-control o" placeholder="이메일 주소" style="margin-bottom: 10px; width:250px;" required
+				autofocus>
+			</div>
+			<div>
+			<button class="btn btn-lg btn-primary btn-block" type="submit">확인</button>
+			</div>
+				
+			<div th:if="*{foundId!=null}"
+				style="margin-top:15px; border: 3px solid gold; background-color: rgb(172, 227, 28); height: auto; width: 250px;">
+				귀하의 아이디는 <h2 th:text=${foundId}></h2>입니다</div>
 
-			<div th:if="${param.error}" class="alert alert-danger" role="alert">
-				Invalid username and password</div>
-
-			<div th:if="${param.logout}" class="alert alert-primary" role="alert">
-				You have been logged out</div>
-
-			<label for="nameMac" class="sr-only">이름 &nbsp &nbsp</label> 
-			<input type="text" id="nameMac" name="nameMac" class="form-control" 
-			 	placeholder="이름" required autofocus> 
-		    <label for="phoneNumMac" class="sr-only">전화번호</label>
-			<input type="text" id="phoneNumMac" name="phoneNumMac" class="form-control"
-				placeholder="전화번호" required autofocus>
-
-			<button class="btn btn-lg btn-primary btn-block" type="submit">Sign
-				in</button>
-
-			<p class="mt-5 mb-3 text-muted">&copy; 2022-07-26</p>
+			<div class="link_user" style="text-align: center; margin-top: 20px;">
+				<a href="/user/addForm">회원등록</a> | <a href="/login/findId">아이디</a>/ <a
+					href="/login/findPassword">암호 찾기</a>
+			</div>
 		</form>
 	</main>
 	<footer class="text-muted py-5">
