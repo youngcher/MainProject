@@ -59,7 +59,7 @@ public class UserController {
 //			return "thymeleaf/mac/User/addForm";
 			return "thymeleaf/bootstrap/index";
 		}
-		return "thymeleaf/mac/error/erroPage";
+		return "thymeleaf/mac/home/home";
 	}
 	
 //	계정추가
