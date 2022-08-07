@@ -28,36 +28,42 @@ public class UserService {
 	@Autowired
 	private JavaMailSender sender;
 	
-	
+	//회원가입
 	public boolean add(User user) {
 		return dao.add(user) > 0;
 	}
 
+	//회원리스트
 	public List<User> getList() {
 		
 		return dao.getList();
 	}
 
+	//회원정보
 	public User getOne(String idMac) {
 		User user = dao.getOne(idMac);
 		return user;
 	}
 
+	//회원삭제
 	public boolean deleted(String idMac) {
 		boolean result = dao.deleted(idMac);
 		return result;
 	}
 
+	//회원정보 수정
 	public boolean updated(User user) {
 		boolean result = dao.updated(user);
 		return result;
 	}
 
+	//아이디 체크
 	public boolean idcheck(String idMac) {
 		User user = dao.getOne(idMac);
 		return user == null;
 	}
 
+	//이메일 인증
 	public String checkmail(String emailMac) {
 		UUID randomUUID = UUID.randomUUID();
 		
@@ -82,6 +88,7 @@ public class UserService {
 		return null;
 	}
 
+	//닉네임 중복 체크
 	public boolean nickCheck(String nick) {
 		User user = dao.getOneNick(nick);
 		return user == null;

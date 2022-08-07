@@ -32,7 +32,8 @@ public class UserController {
 	public String addForm(Model model) {
 		User user = new User();
 		model.addAttribute("user", user);
-		return "thymeleaf/mac/User/addForm";
+//		return "thymeleaf/mac/User/addForm";
+		return "thymeleaf/bootstrap/index";
 	}
 	
 //	아이디 체크후 추가폼
@@ -41,7 +42,8 @@ public class UserController {
 		User user = new User();
 		user.setIdMac(idMac);
 		model.addAttribute("user", user);
-		return "thymeleaf/mac/User/addForm";
+//		return "thymeleaf/mac/User/addForm";
+		return "thymeleaf/bootstrap/index";
 	}
 	
 //	아이디 체크, 이메일 인증후 추가폼
@@ -54,7 +56,8 @@ public class UserController {
 		user.setEmailMac(emailMac);
 		if(Integer.parseInt(check) == 1) {
 			model.addAttribute("user", user);
-			return "thymeleaf/mac/User/addForm";
+//			return "thymeleaf/mac/User/addForm";
+			return "thymeleaf/bootstrap/index";
 		}
 		return "thymeleaf/mac/error/erroPage";
 	}
