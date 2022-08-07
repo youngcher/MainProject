@@ -8,6 +8,11 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script type="text/javascript">
 function deleted() {
+	if(!confirm('삭제하면 복구할 수 없습니다. \n 정말로 삭제하시겠습니까?')) {
+		return false;
+	}
+	
+	
 	$.ajax({
 		url:'/user/deleted',
 		method:'post',
