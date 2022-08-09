@@ -6,7 +6,7 @@
 
 
 <select id="findAllUser" resultType="com.mac.demo.model.User">
-		SELECT * FROM user_tb
+		SELECT nummac, idmac, pkg_crypto.decrypt(pwmac) pwMac, nicknamemac, emailmac, gendermac, birthmac, phonenummac, citymac, townmac, villagemac, namemac FROM USER_TB
 	</select>
 	<select id="findAllFreeBoard" resultType="com.mac.demo.model.Board">
 		SELECT * FROM free_board
@@ -48,5 +48,30 @@
 	<delete id="commentBoardDeleted" parameterType="Integer">
 		DELETE FROM comment_board WHERE numMac=#{numMac}
 	</delete>
+	
+		<select id="getAdsListByKeyword" resultType="com.mac.demo.model.Board" parameterType="String">
+		SELECT NUMMAC, IDMAC, NICKNAMEMAC, TITLEMAC, CONTENTSMAC, WDATEMAC,
+			(SELECT COUNT(*)
+			FROM comment_board c
+			WHERE c.pcodemac = f.nummac) COUNTMAC
+		FROM ads_board f
+		WHERE TITLEMAC 
+		LIKE '%'||#{keyword}||'%'
+		OR CONTENTSMAC
+		LIKE '%'||#{keyword}||'%'
+	</select>
+	
+	<select id="getAdsListByNickName" resultType="com.mac.demo.model.Board" parameterType="String">
+		SELECT NUMMAC, IDMAC, NICKNAMEMAC, TITLEMAC, CONTENTSMAC, WDATEMAC,
+			(SELECT COUNT(*)
+			FROM comment_board c
+			WHERE c.pcodemac = f.nummac) COUNTMAC
+		FROM ads_board f
+		WHERE NICKNAMEMAC 
+		LIKE '%'||#{nickNameMac}||'%'
+		ORDER BY NUMMAC
+		DESC
+	</select>
+	
 
 </mapper>

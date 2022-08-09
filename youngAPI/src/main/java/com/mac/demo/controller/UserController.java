@@ -125,6 +125,7 @@ public class UserController {
 		map.put("id" , idMac);
 		return map;
 	}
+	
 //	email 인증 보내기
 	@PostMapping("/checkmail")
 	@ResponseBody

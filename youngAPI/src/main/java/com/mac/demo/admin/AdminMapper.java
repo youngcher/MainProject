@@ -32,5 +32,8 @@ public interface AdminMapper {
 	boolean noticeBoardDeleted(int numMac);
 	
 	boolean commentBoardDeleted(int numMac);
+	
+	List<Board> getAdsListByKeyword(String keyword);
+	List<Board> getAdsListByNickName(String nickNameMac);
 
 }

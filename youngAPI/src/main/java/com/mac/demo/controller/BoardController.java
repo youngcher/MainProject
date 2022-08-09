@@ -31,9 +31,10 @@ public class BoardController {
 	
 //	커뮤니티메인화면
 	@GetMapping("/main")
-	public String main() {
+	public String main(Model model, HttpSession session) {
 		
-		return "thymeleaf/mac/board/boardMain";
+//		model.addAttribute((String)session.getAttribute("idMac"));
+		return "thymeleaf/mac/board/boardMain_copy";
 	}
 	
 //======================================== 자유게시판 ========================================
@@ -90,7 +91,7 @@ public class BoardController {
 		
 		model.addAttribute("pageInfo", pageInfo);
 		
-		return "thymeleaf/mac/board/free_boardList";
+		return "thymeleaf/mac/board/free_boardList_copy";
 	}
 	
 	
@@ -125,6 +126,7 @@ public class BoardController {
 		
 		return "thymeleaf/mac/board/free_board_detail";
 	}
+	
 	
 //  게시글 삭제
 //	PostMapping 방식으로 form 밖에 있는 데이터를 넘기지 못해 get으로 우선 구현
@@ -173,7 +175,7 @@ public class BoardController {
 		
 		model.addAttribute("pageInfo",pageInfo);
 		
-		return "thymeleaf/mac/board/free_boardList";
+		return "thymeleaf/mac/board/free_boardList_copy";
 	}
 	
 	

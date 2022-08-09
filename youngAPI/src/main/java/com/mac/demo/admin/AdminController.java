@@ -1,5 +1,6 @@
 package com.mac.demo.admin;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,13 +8,17 @@ import java.util.Map;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -46,7 +51,8 @@ public class AdminController {
 	
 	
 	@GetMapping("/err")
-	public String adminLogin(@RequestParam("error") String err,Model model) {
+	public String adminLogin(@RequestParam(value="error",required=false) String err,Model model) {
+		
 		model.addAttribute("msg", err);
 		
 		return "thymeleaf/mac/admin/adminLoginForm";
@@ -59,10 +65,10 @@ public class AdminController {
 	public String allUser(Model model,@RequestParam(name="page", required = false,defaultValue ="1") int page) {
 		
 		//페이지를 설정하면 처음으로 뜰 화면을 기본1로 설정하여 startPage에 넣어준다
-	     PageHelper.startPage(page, 2);
+	     PageHelper.startPage(page, 3);
 			//startPage시작하는 페이지 넘버와 그 페이지에 얼마의 글이 들어갈지를 정한다.
 			PageInfo<User> pageInfo = new PageInfo<>(svc.findAllUser());
-			List<User> list= pageInfo.getList();
+			
 			 model.addAttribute("pageInfo", pageInfo);
              return "thymeleaf/mac/admin/allUser";
 	}
@@ -74,7 +80,7 @@ public class AdminController {
 	     PageHelper.startPage(page, 2);
 			//startPage시작하는 페이지 넘버와 그 페이지에 얼마의 글이 들어갈지를 정한다.
 			PageInfo<Board> pageInfo = new PageInfo<>(svc.findAllFreeBord());
-			List<Board> list= pageInfo.getList();
+		System.out.println(svc.findAllFreeBord());
 			 model.addAttribute("pageInfo", pageInfo);
 		return "thymeleaf/mac/admin/allFreeBoard";
 	}
@@ -86,7 +92,7 @@ public class AdminController {
 	     PageHelper.startPage(page, 2);
 			//startPage시작하는 페이지 넘버와 그 페이지에 얼마의 글이 들어갈지를 정한다.
 			PageInfo<Board> pageInfo = new PageInfo<>(svc.findAllAdsBoard());
-			List<Board> list= pageInfo.getList();
+			
 			 model.addAttribute("pageInfo", pageInfo);
 		return "thymeleaf/mac/admin/allAdsBoard";
 	}
@@ -145,7 +151,7 @@ public class AdminController {
 	     PageHelper.startPage(page, 2);
 			//startPage시작하는 페이지 넘버와 그 페이지에 얼마의 글이 들어갈지를 정한다.
 			PageInfo<Board> pageInfo = new PageInfo<>(svc.findAllNoticeBoard());
-			List<Board> list= pageInfo.getList();
+		
 			 model.addAttribute("pageInfo", pageInfo);
 		return "thymeleaf/mac/admin/allNoticeBoard";
 	}
@@ -163,19 +169,18 @@ public class AdminController {
 	
 	
 	//모든 광고게시판
-		@GetMapping("/admin/allCommentBoard")
+		@GetMapping("/admin/allComment")
 		public String allCommentBoard(Model model,@RequestParam(name="page", required = false,defaultValue ="1") int page) {
 			//페이지를 설정하면 처음으로 뜰 화면을 기본1로 설정하여 startPage에 넣어준다
 		     PageHelper.startPage(page, 2);
 				//startPage시작하는 페이지 넘버와 그 페이지에 얼마의 글이 들어갈지를 정한다.
 				PageInfo<Comment> pageInfo = new PageInfo<>(svc.findAllCommentBoard());
-				List<Comment> list= pageInfo.getList();
 				 model.addAttribute("pageInfo", pageInfo);
-			return "thymeleaf/mac/admin/allCommentBoard";
+			return "thymeleaf/mac/admin/allComment";
 		}
 		
 //		계정 삭제
-		@GetMapping("/admin/commentBoardDeleted/{numMac}")
+		@GetMapping("/admin/commentDeleted/{numMac}")
 		@ResponseBody
 		public Map<String,Object> commentBoardDeleted(@PathVariable("numMac")int numMac, HttpSession session) {
 			Map<String, Object> map = new HashMap<>();
@@ -183,6 +188,46 @@ public class AdminController {
 			boolean result = svc.commentBordDeleted(numMac);
 			map.put("result", result);
 			return map;
+		}
+		
+		@PostMapping("/admin/freeSearch")
+		public String searchFree(@RequestParam(name="page", required = false,defaultValue = "1") int page,
+									@RequestParam(name="category", required = false) String category,
+									@RequestParam(name="keyword", required = false) String keyword,
+									Model model) {
+			
+			PageHelper.startPage(page, 3);
+			
+			PageInfo<Board> pageInfo = null;
+			if(category.equals("contents")) {
+				pageInfo = new PageInfo<>(svc.getFreeListByKeyword(keyword));
+			} else {
+				pageInfo = new PageInfo<>(svc.getFreeListByNickName(keyword));
+			}
+			
+			model.addAttribute("pageInfo",pageInfo);
+			
+			return "thymeleaf/mac/admin/allFreeBoard";
+		}
+		
+		@PostMapping("/admin/adsSearch")
+		public String searchComment(@RequestParam(name="page", required = false,defaultValue = "1") int page,
+									@RequestParam(name="category", required = false) String category,
+									@RequestParam(name="keyword", required = false) String keyword,
+									Model model) {
+			
+			PageHelper.startPage(page, 3);
+			
+			PageInfo<Board> pageInfo = null;
+			if(category.equals("contents")) {
+				pageInfo = new PageInfo<>(svc.getAdsListByKeyword(keyword));
+			} else {
+				pageInfo = new PageInfo<>(svc.getAdsListByNickName(keyword));
+			}
+			
+			model.addAttribute("pageInfo",pageInfo);
+			
+			return "thymeleaf/mac/admin/allAdsBoard";
 		}
 
 }

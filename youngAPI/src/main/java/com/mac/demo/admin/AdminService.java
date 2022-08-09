@@ -17,6 +17,9 @@ public class AdminService {
 	@Autowired 
 	private AdminMapper dao;
 	
+	@Autowired 
+	private BoardMapper bao;
+	
 
 
 	public List<User> findAllUser() {
@@ -73,5 +76,22 @@ public class AdminService {
 		return dao.commentBoardDeleted(numMac);
 	}
 
+	public List<Board> getFreeListByKeyword(String titleMac){
+		return bao.getFreeListByKeyword(titleMac);
+	}
+
+	public List<Board> getFreeListByNickName(String nickNameMac) {
+		return bao.getFreeListByNickName(nickNameMac);
+	}
+
+	public List<Board> getAdsListByKeyword(String keyword) {
+
+		return dao.getAdsListByKeyword(keyword);
+	}
+
+	public List<Board> getAdsListByNickName(String keyword) {
+		
+		return dao.getAdsListByNickName(keyword);
+	}
 
 }
