@@ -19,6 +19,10 @@
 	    var check_SC = 0;
 
 	    //비밀번호 유효성검사
+	    if(document.getElementById('pwMac').value.search(/\s/) != -1) {
+	    	alert('비밀번호에 빈 칸을 포함 할 수 없습니다.');
+	    	return false;
+	    }
 	    if(pw.length < 6 || pw.length>16){
 	        window.alert('비밀번호는 6글자 이상, 16글자 이하만 이용 가능합니다.');
 	        document.getElementById('pwMac').value='';
@@ -92,7 +96,7 @@
 							location.href="/home";
 						},
 						error:function(xhr,status, err){
-							alert('에러:'+err);
+							alert('다시 확인하세요.');
 						}
 					});
 					return false;
@@ -111,7 +115,22 @@
 		
 		
 		//아이디 유효성검사
+	    if(document.getElementById('idMac').value.search(/\s/) != -1) {
+	    	alert('빈 칸을 포함 할 수 없습니다.');
+	    	return false;
+	    }
+		
+	    if(document.getElementById('idMac').value==""){
+			alert('아이디를 입력해주세요.');
+	        return false;
+		}
 	    
+	    var userId = document.getElementById('idMac').value;
+	    var regId = /^([0-9a-zA-Z]{8,15})$/;
+	    if(!regId.test(userId)){
+	     alert('아이디는 숫자,영어 8~15글자여야 합니다.');
+	     return false;    
+	    }
 	    
 		$.ajax({
 			url:'/user/idcheck',
@@ -122,7 +141,18 @@
 			success:function(res){
 				if(res.result) {
 					alert('아이디 사용가능');
-					location.href="/user/addForm/" + res.id;
+					//location.href="/user/addForm/" + res.id;
+					var form = document.createElement('form'); // 폼객체 생성
+					var objs;
+					objs = document.createElement('input'); // 값이 들어있는 녀석의 형식
+					objs.setAttribute('type', 'text'); // 값이 들어있는 녀석의 type
+					objs.setAttribute('name', 'check'); // 객체이름
+					objs.setAttribute('value', 1); //객체값
+					form.appendChild(objs);
+					form.setAttribute('method', 'post'); //get,post 가능
+					form.setAttribute('action', "/user/addForm/"+res.id); //보내는 url
+					document.body.appendChild(form);
+					form.submit();
 				} else {
 					alert('중복된 아이디가 있습니다.');
 				}
@@ -380,7 +410,7 @@
 				<div class="col-md-4 mb-3 mx-auto" th:if="*{idMac!=null && emailMac!=null}">    
 				    <div>
 				        <label for="idMac">아이디</label>
-				        <input class="form-control" type="text" th:field="*{idMac}" id="idMac" th:value="*{idMac}" readonly="readonly">
+				        <input class="form-control" type="text" th:field="*{idMac}" th:value="*{idMac}" readonly="readonly">
 				    </div>
 				    
 				    <div>

@@ -287,3 +287,9 @@ nav.navbar.navbar-expand.bg-ligth {
 div#nav {
     background: lightblue;
 }
+
+form#search_form {
+    position: relative;
+    bottom: 40px;
+    left: 200px;
+}

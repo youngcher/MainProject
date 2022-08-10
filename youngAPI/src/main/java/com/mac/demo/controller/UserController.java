@@ -36,7 +36,7 @@ public class UserController {
 	}
 	
 //	아이디 체크후 추가폼
-	@GetMapping("/addForm/{idMac}")
+	@PostMapping("/addForm/{idMac}")
 	public String addForm2(@PathVariable("idMac")String idMac, Model model) {
 		User user = new User();
 		user.setIdMac(idMac);
@@ -100,6 +100,7 @@ public class UserController {
 //  유저 업데이트폼
 	@GetMapping("/updateForm")
 	public String update(User user, Model model) {
+//		System.out.println("여기누");
 		User user2 = svc.getOne(user.getIdMac());
 		model.addAttribute("user", user2);
 		return "thymeleaf/mac/User/updateForm";

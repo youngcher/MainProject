@@ -122,8 +122,7 @@
         }
     });
     
-    document.querySelector('#logout').onclick=
-    function logout() {
+    $('#logout').click(function(){
 	if (!confirm('정말로 로그아웃하시겠어요?'))
 		return;
 	$.ajax({
@@ -139,7 +138,7 @@
 			alert(err);
 		}
 	});
-}
+});
     
 })(jQuery);
 

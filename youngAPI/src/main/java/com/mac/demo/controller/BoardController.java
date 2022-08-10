@@ -90,6 +90,7 @@ public class BoardController {
 		PageInfo<Board> pageInfo = new PageInfo<>(svc.getFreeList());
 		
 		model.addAttribute("pageInfo", pageInfo);
+		model.addAttribute("page", page);
 		
 		return "thymeleaf/mac/board/free_boardList_copy";
 	}
@@ -174,6 +175,7 @@ public class BoardController {
 		}
 		
 		model.addAttribute("pageInfo",pageInfo);
+		model.addAttribute("page", page);
 		
 		return "thymeleaf/mac/board/free_boardList_copy";
 	}

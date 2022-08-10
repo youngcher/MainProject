@@ -56,12 +56,15 @@ public class AdminConfig
             
             .and()
             .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-            //.csrf().ignoringAntMatchers("/logout") //요청시 'POST' not supported 에러 방지(사기 방지 시스템)
-            // .ignoringAntMatchers("/admin/loginForm")
             .ignoringAntMatchers("/home/**")
             .ignoringAntMatchers("/user/**")
             .ignoringAntMatchers("/board/**")
             .ignoringAntMatchers("/login/**")
+    
+            
+             //요청시 'POST' not supported 에러 방지(사기 방지 시스템)
+            // .ignoringAntMatchers("/admin/loginForm")
+            //.ignoringAntMatchers("/doLogin")
             //.disable()  //csrf 기능을 사용하지 않을 때
             //and는 다른 설정을 한다는 의미
             

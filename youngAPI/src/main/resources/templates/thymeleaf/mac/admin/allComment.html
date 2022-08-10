@@ -131,19 +131,34 @@
 </div>
 </div>
 
-<div class="text-center">
-<span th:each="i :${pageInfo.navigatepageNums}" >
-
-<span th:if="${i==pageInfo.pageNum}">
- <span th:text="${i}"></span>
-</span>
-
-<span th:if="${i!=pageInfo.pageNum}">
-[<a th:text='${i}' th:href="'/admin/allUser?page='+(${i})"></a>]
-</span>
-</span>
-                 
-     </div>                   
+  <div class="container-xxl" id=form> 
+<form id="search_form" method="post" action="/admin/commentSearch" class="form">
+ <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+			<div>
+				&nbsp;&nbsp;
+				<label for="category">검색항목</label> 
+				<select name="category">
+					<option value="contents">댓글 내용</option>
+					<option value="idMac">작성자</option>
+				</select> 
+				<label for="keyword">검색어</label> <input type="text" name="keyword">
+				<button type="submit">검색</button>
+				<button type="reset">취소</button>		
+			</div>
+			&nbsp;&nbsp;
+			<div class="text-center">
+			<span th:each="i :${pageInfo.navigatepageNums}"> 
+				<span th:if="${i==pageInfo.pageNum}"> 
+					<span th:text="${i}">
+					</span>
+				</span> 
+				<span th:if="${i!=pageInfo.pageNum}"> 
+					[<a th:text='${i}' th:href="'/admin/allComment?page='+(${i})"></a>]
+				</span>
+			</span>
+			</div>
+		</form> 
+		 </div>                    
      </div>
      </div>
            
