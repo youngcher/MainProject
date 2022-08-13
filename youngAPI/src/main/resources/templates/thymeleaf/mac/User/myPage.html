@@ -137,6 +137,8 @@
 
     <!-- Service Start -->
     <div class="container-fluid py-5 wow fadeInUp" data-wow-delay="0.1s">
+        <div class="row">
+        <div class="col">
         <div class="input-form">
             <div class="section-title text-center position-relative pb-3 mb-5 mx-auto" style="max-width: 600px;">
                 <h1 class="mb-0">My Page</h1>
@@ -210,13 +212,23 @@
 					<form id="update" th:object="${user}" action="/user/updateForm">
 						<input type="hidden" name="idMac" th:value="*{idMac}">
 						<button class="btn btn-outline-success" type="submit">수정</button>
-					</form>
+					</form> 
 					<hr>
 					<form id="del" th:object="${user}" onsubmit="return deleted();">
 						<input type="hidden" name="idMac" th:value="*{idMac}">
 						<button class="btn btn-outline-danger" type="submit">회원 탈퇴</button>
 					</form>
         </div>
+        </div>
+        <div class="col">
+        <div class="input-form">
+        	<div class="section-title text-center position-relative pb-3 mb-5 mx-auto" style="max-width: 600px;">
+                <h1 class="mb-0">My Write</h1>
+            </div>
+        </div>
+        </div>
+        </div>
+    </div>
     </div>
     <!-- Service End -->
 

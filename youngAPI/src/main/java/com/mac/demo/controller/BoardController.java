@@ -84,13 +84,14 @@ public class BoardController {
 //	자유게시판 리스트
 	@GetMapping("/free/list")
 	public String getListByPage_free(@RequestParam(name="page", required = false,defaultValue = "1") int page, 
-								Model model) {
+								Model model, HttpSession session) {
 
 		PageHelper.startPage(page, 3);
 		PageInfo<Board> pageInfo = new PageInfo<>(svc.getFreeList());
 		
 		model.addAttribute("pageInfo", pageInfo);
 		model.addAttribute("page", page);
+		model.addAttribute("idMac", session.getAttribute("idMac"));
 		
 		return "thymeleaf/mac/board/free_boardList_copy";
 	}
@@ -243,11 +244,11 @@ public class BoardController {
 //	자유게시판 리스트
 	@GetMapping("/notice/list")
 	public String getListByPage_notice(@RequestParam(name="page", required = false,defaultValue = "1") int page, 
-			Model model) {
+			Model model,HttpSession session) {
 		
 		PageHelper.startPage(page, 3);
 		PageInfo<Board> pageInfo = new PageInfo<>(svc.getNoticeList());
-		
+		model.addAttribute("idMac", session.getAttribute("idMac"));
 		model.addAttribute("pageInfo", pageInfo);
 		
 		return "thymeleaf/mac/board/notice_boardList";

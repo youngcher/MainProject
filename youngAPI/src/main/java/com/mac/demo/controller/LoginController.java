@@ -62,7 +62,9 @@ public class LoginController {
 	{	
 		System.out.println(session.getAttribute("idMac"));
 		
-		session.invalidate();
+//		session.invalidate();
+		session.removeAttribute("idMac");
+		
 		Map<String,Object> map = new HashMap<>();
 		map.put("logout", true);
 		return map;
