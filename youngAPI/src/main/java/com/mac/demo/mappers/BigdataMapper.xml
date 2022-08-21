@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTO Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mac.demo.mappers.BigdataMapper">
+
+	<select id="getsi" resultType="String">
+		select SI_NAME from location GROUP BY si_name
+	</select>
+
+	<select id="getdong" parameterType="String" resultType="String">
+		SELECT dong_name from location where si_name = #{si} group by dong_name 
+	</select>
+
+	<select id="getgil" parameterType="String" resultType="String">
+		 SELECT TRDAR_CD_NM from location where DONG_NAME = #{dong} group by TRDAR_CD_NM
+	</select>
+
+</mapper>

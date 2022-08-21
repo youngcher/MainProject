@@ -60,7 +60,7 @@ public class AdminConfig
             .ignoringAntMatchers("/user/**")
             .ignoringAntMatchers("/board/**")
             .ignoringAntMatchers("/login/**")
-    
+            .ignoringAntMatchers("/big/**")
             
              //요청시 'POST' not supported 에러 방지(사기 방지 시스템)
             // .ignoringAntMatchers("/admin/loginForm")
