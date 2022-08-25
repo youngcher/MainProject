@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mac.demo.mappers.BigdataMapper;
+import com.mac.demo.model.XY;
 
 @Service
 public class BigdataService {
@@ -14,19 +15,23 @@ public class BigdataService {
 	private BigdataMapper dao;
 	
 	
-	//시 데이터 가져오기
-	public List<String> getsi() {
-		return dao.getsi();
+	public List<String> getsi(String kind) {
+		return dao.getsi(kind);
+	}
+
+	public List<String> getdong(String si, String kind) {
+		return dao.getdong(si, kind);
 	}
 
 
-	public List<String> getdong(String si) {
-		return dao.getdong(si);
+	public List<String> getgil(String dong, String kind) {
+		return dao.getgil(dong, kind);
 	}
 
 
-	public List<String> getgil(String dong) {
-		return dao.getgil(dong);
+	public XY getxy(String gil) {
+		return dao.getxy(gil);
 	}
+
 
 }
