@@ -29,6 +29,11 @@ public class BigdataController {
 		return "thymeleaf/mac/bigdata/map";
 	}
 	
+	@GetMapping("/test")
+	public String test() {
+		return "thymeleaf/mac/bigdata/test";
+	}
+	
 	//해당 데이터 테이블의 구 데이터 가져오기
 	@PostMapping("/kind")
 	@ResponseBody

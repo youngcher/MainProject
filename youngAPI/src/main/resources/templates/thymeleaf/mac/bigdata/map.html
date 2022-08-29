@@ -80,6 +80,7 @@
 
 <!-- Template Stylesheet -->
 <link href="/main/css/style.css" rel="stylesheet">
+
 </head>
 
 <body>
@@ -179,10 +180,21 @@
 	    <div id="map" style="width:50%;height:100%;position:relative;overflow:hidden;"></div>
 	</div>
 </div>
+
+<br>
+<h1>Flask 비동기 요청</h1>
+    <div>
+        <form id="data" onsubmit="return dataTable();">
+            <input id="first" name="first" value="first">
+        <button type="submit">python 비동기 요청</button>
+        </form>
+    </div>
+
 <!-- Service End -->
 
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=	01cb028783685326bfbb992c1e4945ca&libraries=services"></script>
-<script>
+<script type="text/javascript">
+
 var dataKind;
 var markers = [];
 var x_pit=0;
@@ -315,8 +327,28 @@ function gilevent() {
 	});
 	return false;
 }
-</script>
 
+function dataTable(){
+    var first = document.getElementById('first').value
+    alert(first);
+    $.ajax({
+      type : 'post',
+      url : 'http://127.0.0.1:5000/dataTable',
+      //data : $('#data').serialize(),
+      dataType : 'json',
+      success : function(res) {
+          alert('ajax으로 넘어옴');
+          alert(res.sales.MON_SELNG_AMT);
+        //alert('요청 성공쓰');;
+      },
+      error : function() {
+        alert('요청 실패쓰');
+      }
+    });
+    return false;
+}
+
+</script>
 
 	<!-- Footer Start -->
 	<footer class="text-muted py-5">
