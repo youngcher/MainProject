@@ -64,7 +64,7 @@ public class AdminController {
 	@GetMapping("/admin/allUser")
 	public String allUser(Model model,@RequestParam(name="page", required = false,defaultValue ="1") int page) {
 		
-	     PageHelper.startPage(page, 3);
+	     PageHelper.startPage(page, 5);
 			PageInfo<User> pageInfo = new PageInfo<>(svc.findAllUser());
 			
 			 model.addAttribute("pageInfo", pageInfo);
@@ -74,7 +74,7 @@ public class AdminController {
 	//모든 자유게시판
 	@GetMapping("/admin/allFreeBoard")
 	public String allFreeBord(Model model,@RequestParam(name="page", required = false,defaultValue ="1") int page) {
-	     PageHelper.startPage(page, 2);
+	     PageHelper.startPage(page, 5);
 			PageInfo<Board> pageInfo = new PageInfo<>(svc.findAllFreeBord());
 		System.out.println(svc.findAllFreeBord());
 			 model.addAttribute("pageInfo", pageInfo);
@@ -84,7 +84,7 @@ public class AdminController {
 	//모든 광고게시판
 	@GetMapping("/admin/allAdsBoard")
 	public String allAdsBoard(Model model,@RequestParam(name="page", required = false,defaultValue ="1") int page) {
-	     PageHelper.startPage(page, 2);
+	     PageHelper.startPage(page, 5);
 			PageInfo<Board> pageInfo = new PageInfo<>(svc.findAllAdsBoard());
 			
 			 model.addAttribute("pageInfo", pageInfo);
@@ -144,7 +144,7 @@ public class AdminController {
 	//모든 공지사항
 	@GetMapping("/admin/allNoticeBoard")
 	public String allNoticeBoard(Model model,@RequestParam(name="page", required = false,defaultValue ="1") int page) {
-	     PageHelper.startPage(page, 2);
+	     PageHelper.startPage(page, 5);
 			PageInfo<Board> pageInfo = new PageInfo<>(svc.findAllNoticeBoard());
 		
 			 model.addAttribute("pageInfo", pageInfo);
@@ -167,7 +167,7 @@ public class AdminController {
 		@GetMapping("/admin/allComment")
 		public String allCommentBoard(Model model,@RequestParam(name="page", required = false,defaultValue ="1") int page) {
 			//페이지를 설정하면 처음으로 뜰 화면을 기본1로 설정하여 startPage에 넣어준다
-		     PageHelper.startPage(page, 2);
+		     PageHelper.startPage(page, 5);
 				//startPage시작하는 페이지 넘버와 그 페이지에 얼마의 글이 들어갈지를 정한다.
 				PageInfo<Comment> pageInfo = new PageInfo<>(svc.findAllCommentBoard());
 				 model.addAttribute("pageInfo", pageInfo);
@@ -192,7 +192,7 @@ public class AdminController {
 									@RequestParam(name="keyword", required = false) String keyword,
 									Model model) {
 			
-			PageHelper.startPage(page, 3);
+			PageHelper.startPage(page, 5);
 			
 			PageInfo<Board> pageInfo = null;
 			if(category.equals("contents")) {
@@ -213,7 +213,7 @@ public class AdminController {
 									@RequestParam(name="keyword", required = false) String keyword,
 									Model model) {
 			
-			PageHelper.startPage(page, 3);
+			PageHelper.startPage(page, 5);
 			
 			PageInfo<Board> pageInfo = null;
 			if(category.equals("contents")) {
@@ -234,7 +234,7 @@ public class AdminController {
 									@RequestParam(name="keyword", required = false) String keyword,
 									Model model) {
 			
-			PageHelper.startPage(page, 3);
+			PageHelper.startPage(page, 5);
 			
 			PageInfo<Board> pageInfo = null;
 			if(category.equals("contents")) {
@@ -255,7 +255,7 @@ public class AdminController {
 									@RequestParam(name="keyword", required = false) String keyword,
 									Model model) {
 			
-			PageHelper.startPage(page, 3);
+			PageHelper.startPage(page, 5);
 			
 			PageInfo<Comment> pageInfo = null;
 			if(category.equals("contents")) {
@@ -276,7 +276,7 @@ public class AdminController {
 											@RequestParam(name="keyword", required = false) String keyword,
 											Model model) {
 					
-					PageHelper.startPage(page, 3);
+					PageHelper.startPage(page, 5);
 					
 					PageInfo<User> pageInfo = null;
 					if(category.equals("contents")) {

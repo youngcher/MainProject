@@ -7,6 +7,6 @@
 
 form#search_form {
     position: relative;
-    bottom: 40px;
-    right: 150px;
+    bottom: 20px;
+    right: -350px;
 }

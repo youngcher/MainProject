@@ -17,9 +17,21 @@ public interface BoardMapper {
 //	게시글CRUD
 	int saveToFree(Board board);
 	int saveToAds(Board board);
-	int edit(Board board); //게시글 수정
-	int delete(int num); //게시글 삭제
-	Board getDetail(int num); //게시글 상세보기
+	
+	int Freeedit(Board board); //게시글 수정
+	int Adsedit(Board board);
+	int Noticeedit(Board board);
+	
+	int Freedelete(int num); //게시글 삭제
+	int Adsdelete(int num); 
+	int Noticedelete(int num); 
+	
+	int freeCommentAllDelete(int num);//게시글 삭제하면 댓글도 삭제
+	int adsCommentAllDelete(int num);
+	
+	Board getFreeDetail(int num); //게시글 상세보기
+	Board getAdsDetail(int num);
+	Board getNoticeDetail(int num);
 	
 //	댓글
 	int commentsave(Comment comment);
@@ -39,12 +51,19 @@ public interface BoardMapper {
 	List<Board> getFreeListByKeyword(String keyword);
 	List<Board> getFreeListByNickName(String nickNameMac);
 	
+	List<Board> getAdsListByKeyword(String keyword);
+	List<Board> getAdsListByNickName(String nickNameMac);
 	
+	List<Board> getNoticeListByKeyword(String keyword);
+	List<Board> getNoticeListByNickName(String nickNameMac);
+	
+
 	
 //	myPage
 	List<Board> getMypageInFreeBoard(String idMac);
 	List<Board> getMypageInAdsBoard(String idMac);
 	
 	Page<Board> getList(Pageable pageable);
+	
 
 }

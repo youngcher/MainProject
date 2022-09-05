@@ -1,10 +1,17 @@
 package com.mac.demo.service;
 
+import java.awt.print.Pageable;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.catalina.authenticator.SavedRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.convert.SimplePropertyValueConversions;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+
 
 import com.mac.demo.mappers.BoardMapper;
 import com.mac.demo.mappers.UserMapper;
@@ -37,8 +44,9 @@ public class BoardService {
 //	------------------id로 유저정보 가져오기-------------------    
 	public User getOne(String idMac) {
 		return userDao.getOne(idMac);
+		
 	}
-	
+//	------------------ SAVE -------------------    
 	public boolean saveToFree(Board board){
 		return 0 < boardDao.saveToFree(board);
 	}
@@ -46,17 +54,46 @@ public class BoardService {
 		return 0 < boardDao.saveToAds(board);
 	}
 	
-	
-	public Board getDetail(int num) {
-		return boardDao.getDetail(num);
+//	------------------상세보기-------------------    
+	public Board getFreeDetail(int num) {
+		return boardDao.getFreeDetail(num);
 	}
 	
-	public boolean delete(int num) {
-		return 0 < boardDao.delete(num);
+	public Board getAdsDetail(int num) {
+		return boardDao.getAdsDetail(num);
+	}
+	public Board getNoticeDetail(int num) {
+		return boardDao.getNoticeDetail(num);
+	}
+//	------------------DELETE-------------------    
+	public boolean Freedelete(int num) {
+		return 0 > boardDao.Freedelete(num);
+	}
+	public boolean Adsdelete(int num) {
+		return 0 > boardDao.Adsdelete(num);
+	}
+	public boolean Noticedelete(int num) {
+		return 0 > boardDao.Noticedelete(num);
 	}
 	
-	public boolean edit(Board board) {
-		return 0 < boardDao.edit(board);
+	public boolean Freeedit(Board board) {
+		return 0 < boardDao.Freeedit(board);
+	}
+	public boolean Adsedit(Board board) {
+		return 0 < boardDao.Adsedit(board);
+	}
+	public boolean Noticeedit(Board board) {
+		return 0 < boardDao.Noticeedit(board);
+		
+	}
+
+	public boolean freeCommentAllDelete(int num) {
+		return 0<boardDao.freeCommentAllDelete(num);
+		
+	}
+	public boolean adsCommentAllDelete(int num) {
+		return 0<boardDao.adsCommentAllDelete(num);
+		
 	}
 //	-----------------------댓글-----------------------
 	public List<Comment> getCommentList(int num){
@@ -71,7 +108,7 @@ public class BoardService {
 		return 0 < boardDao.commentdelete(numMac);
 	}
 
-//	-----------------------검색-----------------------	
+//	-----------------------SEARCH-----------------------	
 	public List<Board> getFreeListByKeyword(String titleMac){
 		return boardDao.getFreeListByKeyword(titleMac);
 	}
@@ -79,10 +116,29 @@ public class BoardService {
 	public List<Board> getFreeListByNickName(String nickNameMac) {
 		return boardDao.getFreeListByNickName(nickNameMac);
 	}
+	
+	public List<Board> getAdsListByKeyword(String titleMac){
+		return boardDao.getAdsListByKeyword(titleMac);
+	}
+
+	public List<Board> getAdsListByNickName(String nickNameMac) {
+		return boardDao.getAdsListByNickName(nickNameMac);
+	}
+	
+	public List<Board> getNoticeListByKeyword(String titleMac) {
+		
+		return boardDao.getNoticeListByKeyword(titleMac);
+	}
+
+	public List<Board> getNoticeListByNickName(String nickNameMac) {
+		return boardDao.getNoticeListByNickName(nickNameMac);
+	}
+	
+	
 
 	
 	
-//	------------------------------------------------
+//	------------------------PAGE------------------------
 	public int[] getLinkRange(Page<Board> pageInfo) {
 		int start = 0;
 		int end = 0;
@@ -101,6 +157,9 @@ public class BoardService {
 		}
 		return new int[] { start, end };
 	}
+
+
+	
 
 
 }

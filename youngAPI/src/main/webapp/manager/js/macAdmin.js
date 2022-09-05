@@ -1,6 +1,3 @@
-(function ($) {
-
-})(jQuery);
 
 function noticeDelete(numMac)
 
@@ -111,3 +108,24 @@ function save() {
 		});
 		return false;
 	}(jQuery);
+	
+	function commentDelete(numMac)
+
+    {
+	if(!confirm('해당 댓글을 삭제하시겠어요?')) return;
+	$.ajax({
+		url:'/admin/commentDeleted/'+numMac,
+		method:'get',
+		cache:false,
+		data:$('#del').serialize(),
+		dataType:'json',
+		success:function(res){
+			alert(res.result ? '삭제 성공':'삭제 실패');
+			location.href="/admin/allComment";
+		},
+		error:function(xhr,status, err){
+			alert('에러:'+err);
+		}
+	});
+	return false;
+}(jQuery);
