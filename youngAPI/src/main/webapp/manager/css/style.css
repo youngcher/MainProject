@@ -284,5 +284,6 @@ form#input_form {
 div#page {
    position: relative;
     right:260px;
+    top:100;
   
 }

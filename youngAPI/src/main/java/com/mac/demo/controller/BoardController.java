@@ -3,9 +3,11 @@ package com.mac.demo.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -22,406 +25,211 @@ import com.mac.demo.model.Board;
 import com.mac.demo.model.Comment;
 import com.mac.demo.service.BoardService;
 
+
 @RequestMapping("/board")
 @Controller
 public class BoardController {
 	
-	@Autowired
+	
 	private BoardService svc;
+	
+//	생성자가 1개일 경우, @Autowired를 생략해도 주입가능
+	public BoardController(BoardService svc) {
+		this.svc = svc;
+	}
+	
 	
 //	커뮤니티메인화면
 	@GetMapping("/main")
 	public String main(Model model, HttpSession session) {
 		
 //		model.addAttribute((String)session.getAttribute("idMac"));
-		return "thymeleaf/mac/board/boardMain_copy";
+		return "thymeleaf/mac/board/board_main";
 	}
 	
 //======================================== 자유게시판 ========================================
 //	게시글작성폼
-	@GetMapping("/free/input")
-	public String input(Model model,HttpSession session) {
+	@GetMapping("/{categoryMac}/input")
+	public String input(Model model,
+						HttpSession session,
+						@PathVariable("categoryMac") String categoryMac) {
 		
-		Board board = new Board();
-		System.out.println("현재 접속한 ID : " + (String)session.getAttribute("idMac"));
+		//System.out.println("현재 접속한 ID : " + (String)session.getAttribute("idMac"));
 		
 		// login check
 		if((String)session.getAttribute("idMac") == null){
 			model.addAttribute("msg", "로그인 후 사용 가능합니다.");
-			model.addAttribute("board", board);
+			model.addAttribute("board", new Board());
 			
 		} else {
 			String id = (String)session.getAttribute("idMac");
 			
 			//닉네임 가져오기
+			Board board = new Board();
 			board.setNickNameMac(svc.getOne(id).getNickNameMac());
+			board.setCategoryMac(categoryMac);
 			model.addAttribute("board", board);
 			
 			// 현재 세션의 ID를 넘겨주고 inputform에서는 hidden으로 다시 넘겨받아서 save	 
 			model.addAttribute("idMac", id);
 		}
 		
-		return "thymeleaf/mac/board/free_inputform";
+		return String.format("thymeleaf/mac/board/%s_board_input", categoryMac);
 	}
 	
 
 //	게시글 저장
-	@PostMapping("/free/save")
+	@PostMapping("/{categoryMac}/save")
 	@ResponseBody
-	public Map<String, Object> save(Board board, @SessionAttribute(name = "idMac", required = false) String idMac) {
-		Map<String, Object> map = new HashMap<String, Object>();
+	public String save(Board board,
+									@PathVariable("categoryMac") String categoryMac,
+									@RequestParam("files") MultipartFile[] mfiles,
+									@SessionAttribute(name = "idMac", required = false) String idMac,
+									HttpServletRequest request) {
 		
+		svc.save(board);
 		
-		svc.saveToFree(board);
-		map.put("saved",board.getNumMac());
-		//insert 후 시퀸스의 값을 가져와 map에 넣은뒤 다시 폼으로
-		//그후 그 번호를 가지고 detail로 넘어가독
-		//자세한건 form에 ajax 확인
+		// file 객체 배열의 첫번째 값이 비었는지 검사, 파일이 있을 경우에만 실행되도록 조건문 부여
+		if(mfiles[0].isEmpty() != true) {
+			svc.fileinsert(board, mfiles, request);
+		}
 		
-		return map;
+		//insert 후 해당 글의 num을 다시 폼으로 보내서, 글쓰기 완료 후 해당 글의 상세페이지로 이동되도록 구현
+		return String.format("{\"savednum\":\"%d\"}", board.getNumMac());
 	}
 	
-//	자유게시판 리스트
-	@GetMapping("/free/list")
-	public String getListByPage_free(@RequestParam(name="page", required = false,defaultValue = "1") int page, 
-									Model model,
-									HttpSession session) {
-
+//	리스트
+	@GetMapping("/{categoryMac}/list")
+	public String getListByPage(@RequestParam(name="page", required = false,defaultValue = "1") int page,
+								@PathVariable("categoryMac") String categoryMac,
+								Model model,
+								HttpSession session) {
 		PageHelper.startPage(page, 10);
-		PageInfo<Board> pageInfo = new PageInfo<>(svc.getFreeList());
-		
-		model.addAttribute("pageInfo", pageInfo);
 		model.addAttribute("page", page);
+		model.addAttribute("pageInfo", svc.getPageInfo(categoryMac));
 		model.addAttribute("idMac",(String)session.getAttribute("idMac"));
 		
-		return "thymeleaf/mac/board/free_boardList_copy";
+		return String.format("thymeleaf/mac/board/%s_board_list", categoryMac);
 	}
 	
 	
 //  게시글 보기
-	@GetMapping("/free/detail/{num}")
-	public String getDetail(@PathVariable("num") int num, 
+	@GetMapping("/{categoryMac}/detail/{num}")
+	public String getDetail(@PathVariable("num") int num,
+							@PathVariable("categoryMac") String categoryMac,
 							@RequestParam(name="page", required = false,defaultValue = "1") int page, 
 							Model model,
 							HttpSession session) {
 		
 		//test용
-		String idMac = null;
 		Comment comment = new Comment();
 		if(session.getAttribute("idMac") != null) {
-			idMac = (String)session.getAttribute("idMac");
 			comment.setIdMac((String) session.getAttribute("idMac"));
-			comment.setNickNameMac(svc.getOne(idMac).getNickNameMac());	
+			comment.setNickNameMac(svc.getOne((String)session.getAttribute("idMac")).getNickNameMac());	
 			comment.setPcodeMac(num);
-			model.addAttribute("idMac", idMac);
+			model.addAttribute("idMac", (String)session.getAttribute("idMac"));
 		} else {
 			model.addAttribute("msg", "로그인 후 작성 가능합니다.");
 		}
 		
-		// 글상세
-		model.addAttribute("num", num);
-		model.addAttribute("board", svc.getFreeDetail(num));
+//		게시판 분기
+		model.addAttribute("board", svc.getDetail(num, categoryMac));
 		
-		
+//		Pagenation
 		PageHelper.startPage(page, 7);
-		PageInfo<Comment> pageInfo = new PageInfo<>(svc.getCommentList(num));
-		
-		model.addAttribute("pageInfo", pageInfo);
+		model.addAttribute("pageInfo", new PageInfo<>(svc.getCommentList(num)));
 		model.addAttribute("page", page);
-		// 댓글
+		
+//		Comment
 		model.addAttribute("comment", comment);
+		
+//		File
+		model.addAttribute("filelist", svc.getFileList(num));
+		model.addAttribute("fileindex", svc.getFileList(num).size());
+		
 		
 		// 댓글 삭제를 위한 idMac체크
 		
-		return "thymeleaf/mac/board/free_board_detail_copy";
+		return String.format("thymeleaf/mac/board/%s_board_detail", categoryMac);
 	}
-	
-	
-	
-	
 	
 //  게시글 삭제
 //	PostMapping 방식으로 form 밖에 있는 데이터를 넘기지 못해 get으로 우선 구현
-	@GetMapping("/free/delete/{num}")
+	@GetMapping("/{categoryMac}/delete/{num}")
 	@ResponseBody
-	public Map<String, Object> delete(@PathVariable("num") int num) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		
-		map.put("deleted", svc.Freedelete(num));
-		map.put("commetdeleted", svc.freeCommentAllDelete(num));
-		return map;
+	public String delete(@PathVariable("num") int num,
+									  @PathVariable("categoryMac") String categoryMac) {
+		return String.format("{\"deleted\":\"%b\"}", svc.delete(num));
 	}
 	
 //  게시글 업데이트폼
-	@GetMapping("/free/update/{num}")
-	public String update(@PathVariable("num") int num, Model model) {
-		model.addAttribute("board", svc.getFreeDetail(num));
-		return "thymeleaf/mac/board/free_updateform";
+	@GetMapping("/{categoryMac}/update/{num}")
+	public String update(@PathVariable("num") int num, 
+						 HttpSession session,
+						 Model model,
+						 @PathVariable("categoryMac") String categoryMac) {
+		model.addAttribute("idMac", (String)session.getAttribute("idMac"));
+		model.addAttribute("board", svc.getDetail(num, categoryMac));
+		model.addAttribute("filelist", svc.getFileList(num));
+		model.addAttribute("fileindex", svc.getFileList(num).size());
+		
+		return String.format("thymeleaf/mac/board/%s_board_edit", categoryMac);
 	}
 	
 //  게시글 수정
-	@PostMapping("/free/edit")
+	@PostMapping("/{categoryMac}/edit")
 	@ResponseBody
-	public Map<String, Object> edit(Board newBoard) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("updated", svc.Freeedit(newBoard));
-		return map;
+	public String edit(Board newBoard,
+									@RequestParam("files") MultipartFile[] mfiles,
+									@PathVariable("categoryMac") String categoryMac,
+									HttpServletRequest request) {
+//		Map<String, Object> map = new HashMap<String, Object>();
+//		boolean updated = svc.update(newBoard);
+		if(mfiles[0].isEmpty() != true) {
+			svc.fileupdate(newBoard, mfiles, request);
+		}
+			
+		return String.format("{\"updated\":\"%b\"}", svc.update(newBoard));
 	}
 	
 	
 //	게시글 타이틀 검색
-	@GetMapping("/free/search")
+	@GetMapping("/{categoryMac}/search")
 	public String getListByTitle(@RequestParam(name="page", required = false,defaultValue = "1") int page,
-								@RequestParam(name="category", required = false) String category,
-								@RequestParam(name="keyword", required = false) String keyword,
-								Model model) {
+								 @RequestParam(name="category", required = false) String category,
+								 @RequestParam(name="keyword", required = false) String keyword,
+								 @PathVariable("categoryMac") String categoryMac,
+								 Model model) {
 		
 		PageHelper.startPage(page, 10);
-		System.out.println(keyword);
 		
 		PageInfo<Board> pageInfo = null;
-		if(category.equals("contents")) {
-			pageInfo = new PageInfo<>(svc.getFreeListByKeyword(keyword));
-		} else {
-			pageInfo = new PageInfo<>(svc.getFreeListByNickName(keyword));
+		if(categoryMac.contentEquals("free")) {
+			if(category.equals("contents")) {
+				pageInfo = new PageInfo<>(svc.getFreeListByKeyword(keyword));
+			} else {
+				pageInfo = new PageInfo<>(svc.getFreeListByNickName(keyword));
+			}
+		} else if(categoryMac.contentEquals("ads")) {
+			if(category.equals("contents")) {
+				pageInfo = new PageInfo<>(svc.getAdsListByKeyword(keyword));
+			} else {
+				pageInfo = new PageInfo<>(svc.getAdsListByNickName(keyword));
+			}
+		} else if(categoryMac.contentEquals("notice")) {
+			if(category.equals("contents")) {
+				pageInfo = new PageInfo<>(svc.getAdsListByKeyword(keyword));
+			} else {
+				pageInfo = new PageInfo<>(svc.getAdsListByNickName(keyword));
+			}
 		}
 		
 		model.addAttribute("pageInfo",pageInfo);
 		model.addAttribute("page", page);
 		
-		return "thymeleaf/mac/board/free_boardList_copy";
+		return String.format("thymeleaf/mac/board/%s_board_list", categoryMac);
 	}
 	
-	
-	
-//======================================== 광고게시판 ========================================
-//	광고게시판
-	@GetMapping("/ads/list")
-	public String getListByPage_ads(@RequestParam(name="page", required = false,defaultValue = "1") int page, 
-									Model model,
-									HttpSession session) {
-		
-		PageHelper.startPage(page, 5);
-		PageInfo<Board> pageInfo = new PageInfo<>(svc.getAdsList());
-		
-		model.addAttribute("pageInfo", pageInfo);
-		model.addAttribute("page", page);
-		model.addAttribute("idMac",(String)session.getAttribute("idMac"));
-		
-		return "thymeleaf/mac/board/ads_boardList_copy";
-	}
-	
-//	광고게시글 작성폼
-	@GetMapping("/ads/input")
-	public String input_ads(Model model,HttpSession session) {
-		
-		Board board = new Board();
-		System.out.println("현재 접속한 ID : " + (String)session.getAttribute("idMac"));
-		
-		// login check
-		if((String)session.getAttribute("idMac") == null){
-			model.addAttribute("msg", "로그인 후 사용 가능합니다.");
-			model.addAttribute("board", board);
-			
-		} else {
-			String id = (String)session.getAttribute("idMac");
-			
-			//닉네임 가져오기
-			board.setNickNameMac(svc.getOne(id).getNickNameMac());
-			model.addAttribute("board", board);
-			
-			// 현재 세션의 ID를 넘겨주고 inputform에서는 hidden으로 다시 넘겨받아서 save	 
-			model.addAttribute("idMac", id);
-		}
-		
-		return "thymeleaf/mac/board/ads_inputform";
-	}
-//	게시글 타이틀 검색
-	@GetMapping("/ads/search")
-	public String getListByTitle_ads(@RequestParam(name="page", required = false,defaultValue = "1") int page,
-								@RequestParam(name="category", required = false) String category,
-								@RequestParam(name="keyword", required = false) String keyword,
-								Model model) {
-		
-		PageHelper.startPage(page, 10);
-		System.out.println(keyword);
-		
-		PageInfo<Board> pageInfo = null;
-		if(category.equals("contents")) {
-			pageInfo = new PageInfo<>(svc.getAdsListByKeyword(keyword));
-		} else {
-			pageInfo = new PageInfo<>(svc.getAdsListByNickName(keyword));
-		}
-		
-		model.addAttribute("pageInfo",pageInfo);
-		model.addAttribute("page", page);
-		
-		return "thymeleaf/mac/board/ads_boardList_copy";
-	}
-	
-//  게시글 보기
-	@GetMapping("/ads/detail/{num}")
-	public String getDetail_ads(@PathVariable("num") int num, 
-								@RequestParam(name="page", required = false,defaultValue = "1") int page,
-							Model model,
-							HttpSession session) {
-		
-		//test용
-		String idMac = null;
-		Comment comment = new Comment();
-		if(session.getAttribute("idMac") != null) {
-			idMac = (String)session.getAttribute("idMac");
-			comment.setIdMac((String) session.getAttribute("idMac"));
-			comment.setNickNameMac(svc.getOne(idMac).getNickNameMac());	
-			comment.setPcodeMac(num);
-			model.addAttribute("idMac", idMac);
-		} else {
-			model.addAttribute("msg", "로그인 후 작성 가능합니다.");
-		}
-		
-		// 글상세
-		model.addAttribute("num", num);
-		model.addAttribute("board", svc.getAdsDetail(num));
-		
-		// 댓글
-		PageHelper.startPage(page, 7);
-		PageInfo<Comment> pageInfo = new PageInfo<>(svc.getCommentList(num));
-		
-		model.addAttribute("pageInfo", pageInfo);
-		model.addAttribute("page", page);
-		model.addAttribute("comment", comment);
-		
-		// 댓글 삭제를 위한 idMac체크
-		
-		return "thymeleaf/mac/board/ads_board_detail_copy";
-	}
-	
-
-	
-	
-	
-//  게시글 삭제
-//	PostMapping 방식으로 form 밖에 있는 데이터를 넘기지 못해 get으로 우선 구현
-	@GetMapping("/ads/delete/{num}")
-	@ResponseBody
-	public Map<String, Object> delete_ads(@PathVariable("num") int num) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		svc.adsCommentAllDelete(num);
-		map.put("deleted", svc.Adsdelete(num));
-		map.put("commetdeleted", svc.adsCommentAllDelete(num));
-		return map;
-	}
-	
-//  게시글 업데이트폼
-	@GetMapping("/ads/update/{num}")
-	public String update_ads(@PathVariable("num") int num, Model model) {
-		model.addAttribute("board", svc.getAdsDetail(num));
-		return "thymeleaf/mac/board/ads_updateform";
-	}
-	
-//  게시글 수정
-	@PostMapping("/ads/edit")
-	@ResponseBody
-	public Map<String, Object> edit_ads(Board newBoard) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("updated", svc.Adsedit(newBoard));
-		return map;
-	}
-	
-//	광고게시글 저장
-	@PostMapping("/ads/save")
-	@ResponseBody
-	public Map<String, Object> save_ads(Board board, @SessionAttribute(name = "idMac", required = false) String idMac) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		svc.saveToAds(board);
-		map.put("saved",board.getNumMac());
-		//insert 후 시퀸스의 값을 가져와 map에 넣은뒤 다시 폼으로
-		//그후 그 번호를 가지고 detail로 넘어가독
-		//자세한건 form에 ajax 확인
-		
-		return map;
-	}
-
-//======================================== 공지게시판 ========================================
-//	자유게시판 리스트
-	@GetMapping("/notice/list")
-	public String getListByPage_notice(@RequestParam(name="page", required = false,defaultValue = "1") int page, 
-										Model model,
-										HttpSession session) {
-		
-		PageHelper.startPage(page, 10);
-		PageInfo<Board> pageInfo = new PageInfo<>(svc.getNoticeList());
-		
-		model.addAttribute("pageInfo", pageInfo);
-		model.addAttribute("page", page);
-		model.addAttribute("idMac",(String)session.getAttribute("idMac"));
-		
-		return "thymeleaf/mac/board/notice_boardList_copy";
-	}
-	
-//  게시글 보기
-	@GetMapping("/notice/detail/{num}")
-	public String getDetail_notice(@PathVariable("num") int num, 
-							Model model,
-							HttpSession session,
-							@RequestParam(name="page", required = false,defaultValue = "1") int page) {
-		
-		//test용
-		String idMac = null;
-		Comment comment = new Comment();
-		if(session.getAttribute("idMac") != null) {
-			idMac = (String)session.getAttribute("idMac");
-			comment.setIdMac((String) session.getAttribute("idMac"));
-			comment.setNickNameMac(svc.getOne(idMac).getNickNameMac());	
-			comment.setPcodeMac(num);
-			model.addAttribute("idMac", idMac);
-		} else {
-			model.addAttribute("msg", "로그인 후 작성 가능합니다.");
-		}
-		
-		// 글상세
-		model.addAttribute("num", num);
-		model.addAttribute("board", svc.getNoticeDetail(num));
-		
-		// 댓글
-		PageHelper.startPage(page, 10);
-		PageInfo<Comment> pageInfo = new PageInfo<>(svc.getCommentList(num));
-		model.addAttribute("commentlist",svc.getCommentList(num));
-		model.addAttribute("pageInfo", pageInfo);
-		model.addAttribute("page", page);
-		model.addAttribute("comment", comment);
-		
-		// 댓글 삭제를 위한 idMac체크
-		
-		return "thymeleaf/mac/board/notice_board_detail_copy";
-	}
-	
-	@GetMapping("/notice/search")
-	public String getListByTitle_Notice(@RequestParam(name="page", required = false,defaultValue = "1") int page,
-								@RequestParam(name="category", required = false) String category,
-								@RequestParam(name="keyword", required = false) String keyword,
-								Model model) {
-		
-		PageHelper.startPage(page, 10);
-		System.out.println(keyword);
-		
-		PageInfo<Board> pageInfo = null;
-		if(category.equals("contents")) {
-			pageInfo = new PageInfo<>(svc.getNoticeListByKeyword(keyword));
-		} else {
-			pageInfo = new PageInfo<>(svc.getNoticeListByNickName(keyword));
-		}
-		
-		model.addAttribute("pageInfo",pageInfo);
-		model.addAttribute("page", page);
-		
-		return "thymeleaf/mac/board/notice_boardList_copy";
-	}
-
 //======================================== 댓글 ========================================
 	@PostMapping("/comment")
 	@ResponseBody
@@ -431,12 +239,12 @@ public class BoardController {
 		if((String)session.getAttribute("idMac") == null){ //세션을 가져옴
 			map.put("msg", "로그인 후 사용 가능합니다.");
 		} else {
-			System.out.println(comment.getCommentMac());
 			map.put("commented", svc.commentsave(comment));
 		}
 		
 		return map;
 	}
+	
 	
 	@GetMapping("/comment/delete/{numMac}")
 	@ResponseBody
@@ -447,5 +255,22 @@ public class BoardController {
 		map.put("deleted", svc.commentdelete(numMac));
 		return map;
 	}
-//=====================================================================================
+//======================================== 파일 ========================================
+	
+	@GetMapping("/file/delete/{numMac}")
+	@ResponseBody
+	public Map<String, Object> file_delte(@PathVariable("numMac") int numMac, 
+										  Model model, HttpSession session) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		System.out.println("삭제할 파일 No. : " + numMac);
+		map.put("filedeleted", svc.filedelete(numMac));
+		return map;
+	}
+	
+	@GetMapping("/file/download/{filenum}")
+	@ResponseBody
+	public ResponseEntity<Resource> download(HttpServletRequest request,
+											 @PathVariable(name="filenum", required = false) int FileNum) throws Exception {
+		return svc.download(request, FileNum);
+	}
 }

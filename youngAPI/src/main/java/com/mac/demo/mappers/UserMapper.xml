@@ -22,7 +22,7 @@
 	</select>
 
 	<update id="updated" parameterType="com.mac.demo.model.User">
-		UPDATE USER_TB SET pwmac=pkg_crypto.encrypt(#{pwMac}), emailmac=#{emailMac}, phonenummac=#{phoneNumMac}, citymac=#{cityMac}, townmac=#{townMac}, villagemac=#{villageMac} WHERE idmac=#{idMac}
+		UPDATE USER_TB SET pwmac=pkg_crypto.encrypt(#{pwMac}), emailmac=#{emailMac}, phonenummac=#{phoneNumMac}, citymac=#{cityMac}, townmac=#{townMac}, villagemac=#{villageMac}, birthmac=#{birthMac} WHERE idmac=#{idMac}
 	</update>
 	
 	<delete id="deleted" parameterType="String">
@@ -30,27 +30,10 @@
 	</delete>
 	
 	<select id="findWrite" resultType="com.mac.demo.model.Board" parameterType="String">
-		SELECT nummac,titlemac,wdatemac, idmac,nicknamemac,
-		       (select table_name 
-		          from all_tables 
-                 where table_name='ADS_BOARD'
-                ) as TABLEMAC
-
-          FROM ADS_BOARD
-         WHERE idmac=#{idMac}
-
-
-       UNION
-
-	  SELECT nummac,titlemac,wdatemac, idmac,nicknamemac,
-             (select table_name 
-				from all_tables 
-			   where table_name='FREE_BOARD'
-			) as TABLEMAC
-
-	   FROM FREE_BOARD 
-	  WHERE idmac=#{idMac}
-	</select>
+      SELECT nummac,titlemac,wdatemac, idmac,nicknamemac,categoryMac
+        FROM BOARD
+       WHERE idmac=#{idMac}
+   </select>
 
 	
 	

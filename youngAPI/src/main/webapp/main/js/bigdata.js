@@ -11,6 +11,8 @@ var mapContainer = document.getElementById('map'), // 지도를 표시할 div
     };  
 
 function hidden(){
+	//$("#location").hide();
+	//$("#location_serch").hide();
 	$("#sales_view").hide();
 	$("#population_view").hide();
 	$("#stores_view").hide();	
@@ -18,8 +20,19 @@ function hidden(){
 	$("#year").hide();
 	$("#quarter").hide();
 	$("#check_co").hide();
+	$("#data_serch").hide();
+	//$("#map").hide();
 }
-    
+
+function hidshow(){
+	$("#location").show();
+	$("#location_serch").show();
+	$("#year").show();
+	$("#quarter").show();
+	$("#data_serch").show();
+	//$("#map").show();
+}
+
 hidden();
 
 
@@ -30,7 +43,7 @@ var map = new kakao.maps.Map(mapContainer, mapOption);
 var zoomControl = new kakao.maps.ZoomControl();
 map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
 
-////////
+//좌표찍기
 function start1(){
 	var geocoder = new kakao.maps.services.Geocoder(), // 좌표계 변환 객체를 생성합니다
 		     wtmX = x_pit, // 변환할 WTM X 좌표 입니다
@@ -52,7 +65,8 @@ function start1(){
 	});
 }
 
-function panTo() {
+//지도출력
+function start2() {
 	//마커 제거//
 	for (var i=0; i<markers.length; i++){
 		markers[i].setMap(null);
@@ -75,6 +89,7 @@ function panTo() {
     markers.push(marker)
 }
 
+//데이터 종류 선택
 function dataTable(kind) {
 	dataKind = kind;
 	$.ajax({
@@ -96,20 +111,19 @@ function dataTable(kind) {
 			
 			hidden();
 			if(dataKind == "sales"){
+				hidshow();
 				$("#sales_view").show();
 				$("#svc_name").show();
-				$("#year").show();
-				$("#quarter").show();
 				$("#check_co").show();
+				
 	        } else if (dataKind =="population") {
+				hidshow();
 				$("#population_view").show();
-				$("#year").show();
-				$("#quarter").show();
+				
 			}  else {
+				hidshow();				
 				$("#stores_view").show();
 				$("#svc_name").show();
-				$("#year").show();
-				$("#quarter").show();
 			}
 			
 		},
@@ -120,6 +134,7 @@ function dataTable(kind) {
 	return false;
 }
 
+//구 찾기
 function guevent() {
 	var thigu = document.getElementById("gu").value;
 	$.ajax({
@@ -142,6 +157,7 @@ function guevent() {
 	return false;
 }
 
+//동 찾기
 function dongevent() {
 	var thisdong = document.getElementById("dong").value;
 	$.ajax({
@@ -163,6 +179,7 @@ function dongevent() {
 	return false;
 }
 
+//골목길 찾기
 function gilevent() {
 	var thisgil = document.getElementById("gil").value;
 	$.ajax({
@@ -188,15 +205,16 @@ function gilevent() {
 			}
 			
 			
-			
 		},
 		error:function(xhr,status, err){
 			alert('길을 선택해주세요');
 		}
 	});
+	
 	return false;
 }
 
+//서비스명 찾기
 function svcevent() {
 	var thissvc = document.getElementById("svc_name").value;
 	var thisgil = document.getElementById("trdar_name").value;
@@ -217,6 +235,7 @@ function svcevent() {
 	return false;
 }
 
+//년도 찾기
 function yearevent() {
 	var thisyear = document.getElementById("year").value;
 	var thissvc = document.getElementById("svc_name").value;
@@ -237,6 +256,7 @@ function yearevent() {
 	return false;
 }
 
+//AI 서버(python) 연동
 function flask(){
     $.ajax({
       type : 'post',
@@ -251,7 +271,7 @@ function flask(){
 		}  else {
 			store(res.rowData);
 		}
-		
+		start2();
       },
       error : function() {
         alert('요청 실패쓰');
@@ -261,6 +281,7 @@ function flask(){
 }
 
 
+//매출 그래프 생성
 var myChart1 = new Chart(document.getElementById("sales1"), {
     type: "bar",
     data: {
@@ -268,7 +289,7 @@ var myChart1 = new Chart(document.getElementById("sales1"), {
         datasets: [{
                 label: "요일별 매출",
                 data: [],
-                backgroundColor: "rgba(0, 156, 255, .7)"
+                backgroundColor: "rgba(0, 156, 255, .7)",
             }]
         },
 });	
@@ -286,15 +307,15 @@ var myChart2 = new Chart(document.getElementById("sales2"), {
 });
 
 var myChart3 = new Chart(document.getElementById("sales3"), {
-    type: "bar",
+    type: "pie",
     data: {
         labels: ["남성", "여성"],
         datasets: [{
                 label: "성별 매출",
                 data: [],
-                backgroundColor: "rgba(0, 156, 255, .7)"
+                backgroundColor: ['rgb(255, 99, 132)', 'rgb(54, 162, 235)']
             }]
-        },
+        }
 });
 
 var myChart4 = new Chart(document.getElementById("sales4"), {
@@ -306,20 +327,20 @@ var myChart4 = new Chart(document.getElementById("sales4"), {
                 data: [],
                 backgroundColor: "rgba(0, 156, 255, .7)"
             }]
-        },
+        }
 });
 
-//pupulation
+//유동인구 그래프 생성
 var myChart5 = new Chart(document.getElementById("pupulation1"), {
-    type: "bar",
+    type: "pie",
     data: {
         labels: ["남성" ,"여성"],
         datasets: [{
                 label: "성별 생활인구 수",
                 data: [],
-                backgroundColor: "rgba(0, 156, 255, .7)"
+                backgroundColor: ['rgb(255, 99, 132)', 'rgb(54, 162, 235)']
             }]
-        },
+        }
 });
 
 var myChart6 = new Chart(document.getElementById("pupulation2"), {
@@ -331,7 +352,7 @@ var myChart6 = new Chart(document.getElementById("pupulation2"), {
                 data: [],
                 backgroundColor: "rgba(0, 156, 255, .7)"
             }]
-        },
+        }
 });
 
 var myChart7 = new Chart(document.getElementById("pupulation3"), {
@@ -343,7 +364,7 @@ var myChart7 = new Chart(document.getElementById("pupulation3"), {
                 data: [],
                 backgroundColor: "rgba(0, 156, 255, .7)"
             }]
-        },
+        }
 });
 
 var myChart8 = new Chart(document.getElementById("pupulation4"), {
@@ -355,10 +376,10 @@ var myChart8 = new Chart(document.getElementById("pupulation4"), {
                 data: [],
                 backgroundColor: "rgba(0, 156, 255, .7)"
             }]
-        },
+        }
 });
 
-
+//매출 그래프 그리기
 function salesFun(salesData){
 	var sales = salesData;
 	var check_co = document.getElementById("check_co").value;
@@ -411,17 +432,17 @@ function salesFun(salesData){
     var ctx3 = document.getElementById("sales3");
 	myChart3.destroy();
     myChart3 = new Chart(ctx3, {
-        type: "bar",
+        type: "pie",
         data: {
-        	labels: ["남성", "여성"],
+        	labels: ["여성", "남성"],
             datasets: [{
                     label: "성별 매출",
                     data: data3,
-                    backgroundColor: "rgba(0, 156, 255, .7)"
+                    backgroundColor: ['rgb(255, 99, 132)', 'rgb(54, 162, 235)']
                 }
             ]},
         options: {
-            responsive: true
+            responsive: false
         }
     });
     
@@ -446,24 +467,24 @@ function salesFun(salesData){
     
 }
 
-
+//유동인구 그래프 그리기
 function populationFun(rowData){
 	var population = rowData;
 	
 	var ctx5 = document.getElementById("pupulation1");
 	myChart5.destroy();
     myChart5 = new Chart(ctx5, {
-        type: "bar",
+        type: "pie",
         data: {
-        labels: ["남성" ,"여성"],
+        labels: ["여성", "남성"],
             datasets: [{
                 label: "성별 생활인구 수",
                     data: [population.ML_FLPOP_CO, population.FML_FLPOP_CO],
-                    backgroundColor: "rgba(0, 156, 255, .7)"
+                    backgroundColor: ['rgb(255, 99, 132)', 'rgb(54, 162, 235)']
                 }
             ]},
         options: {
-            responsive: true
+            responsive: false
         }
     });
     
@@ -521,6 +542,7 @@ function populationFun(rowData){
     document.getElementById("population_count").innerHTML = "총 생활인구 : "+ population.TOT_FLPOP_CO+"명";
 }
 
+//점포데이터 출력
 function store(rowData){
 	var store = rowData;
 	document.getElementById("store_count").innerHTML = "점포 수: 총 "+store.STOR_CO +"개";
