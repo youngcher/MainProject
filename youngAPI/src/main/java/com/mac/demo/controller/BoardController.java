@@ -262,7 +262,6 @@ public class BoardController {
 	public Map<String, Object> file_delte(@PathVariable("numMac") int numMac, 
 										  Model model, HttpSession session) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		System.out.println("삭제할 파일 No. : " + numMac);
 		map.put("filedeleted", svc.filedelete(numMac));
 		return map;
 	}

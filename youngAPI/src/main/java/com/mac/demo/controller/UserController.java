@@ -100,7 +100,6 @@ public class UserController {
 		
 		PageHelper.startPage(page, 5);
 		PageInfo<Board> pageInfo = new PageInfo<>(svc.findWrite(idMac));
-		System.out.println(svc.findWrite(idMac).toString());
 		model.addAttribute("pageInfo", pageInfo);
 		model.addAttribute("page", page);
 		

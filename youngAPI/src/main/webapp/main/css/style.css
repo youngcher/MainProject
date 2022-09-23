@@ -649,11 +649,8 @@ div.map{
 	width:50%;
 	float:left;
 	box-sizing:border-box;
-	
 	height: 800px;
-	position: relative;
-    top:100px;
-    left: 50px;
+	
 }
 
 div.data{
@@ -662,7 +659,7 @@ div.data{
 	float:right;
 	box-sizing:border-box;
 	height: 800px;
-	margin-top: 5%;
+
 	
 	
 }

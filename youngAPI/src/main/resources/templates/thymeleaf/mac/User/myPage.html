@@ -232,9 +232,12 @@
 									  <tbody>
 									<tr th:each="myWrite : ${pageInfo.list}">
 										<td th:text="${myWrite.numMac}"></td>
-										<td><a th:text="${myWrite.titleMac}"
-											th:href="@{'/board/ads/detail/'+ ${myWrite.numMac}}"></a> 
-										</td>
+										<td th:if="${myWrite.categoryMac =='ads'}"><a th:text="${myWrite.titleMac}"
+			                                th:href="@{'/board/ads/detail/'+ ${myWrite.numMac}}"></a> 
+			                            </td>
+			                            <td th:if="${myWrite.categoryMac =='free'}"><a th:text="${myWrite.titleMac}"
+	                                    	th:href="@{'/board/free/detail/'+ ${myWrite.numMac}}"></a> 
+			                            </td>
 										
 										<td th:text="${myWrite.nickNameMac}"></td>
 										<td th:text="${myWrite.wdateMac}"></td>

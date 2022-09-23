@@ -43,7 +43,6 @@ public class LoginController {
 //		checkdeId에 데이터가 있을시 세션에 id저장
 		if(idMac.equals(checkedId)) {
 		session.setAttribute("idMac", idMac);
-		System.out.println(session.getAttribute("idMac").toString());
 		model.addAttribute("idMac",session.getAttribute("idMac").toString());
 		
 		return "redirect:/home";
@@ -60,8 +59,6 @@ public class LoginController {
 	@ResponseBody
 	public Map<String,Object> logout(HttpSession session, Model model) 
 	{	
-		System.out.println(session.getAttribute("idMac"));
-		
 //		session.invalidate();
 		session.removeAttribute("idMac");
 		
